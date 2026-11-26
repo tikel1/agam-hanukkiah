@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 560" font-family="Arial, sans-serif" font-size="13">
+  <!-- Agam "Fire and Water" fountain: elevation (left) and plan of the toothed ring edge (right).
+       All dimensions are ESTIMATES from photos, normalised to sculpture height H = 1.0 (stem bottom to dome top).
+       Scale in this drawing: 1.0 H = 400 px. Centre line x = 400. -->
+  <rect width="1300" height="560" fill="#ffffff"/>
+  <text x="20" y="24" font-size="16" font-weight="bold">Elevation (side view), estimated proportions, H = 1.0</text>
+
+  <!-- pool water line -->
+  <line x1="40" y1="440" x2="760" y2="440" stroke="#4aaee0" stroke-width="3"/>
+  <text x="45" y="458" fill="#1f64b4">pool water level (pool dia ~3.1 H, not drawn to width)</text>
+
+  <!-- stem -->
+  <rect x="324" y="421.2" width="152" height="18.4" fill="#ddd" stroke="#333"/>
+  <!-- R1 bottom ring -->
+  <rect x="290" y="366" width="220" height="55.2" fill="#f4f4f4" stroke="#333"/>
+  <!-- R2 -->
+  <rect x="192" y="298.4" width="416" height="67.6" fill="#f4f4f4" stroke="#333"/>
+  <!-- R3 main ring -->
+  <rect x="92" y="181.6" width="616" height="116.8" fill="#f4f4f4" stroke="#333" stroke-width="2"/>
+  <!-- R4 -->
+  <rect x="192" y="120" width="416" height="61.6" fill="#f4f4f4" stroke="#333"/>
+  <!-- R5 top ring -->
+  <rect x="290" y="70.8" width="220" height="49.2" fill="#f4f4f4" stroke="#333"/>
+  <!-- dome -->
+  <path d="M338 70.8 A62 30.8 0 0 1 462 70.8 Z" fill="#e8f4fb" stroke="#333"/>
+  <!-- flame -->
+  <path d="M400 40 C392 52 394 60 400 66 C406 60 408 52 400 40 Z" fill="#f36a1e" stroke="#c2283f"/>
+
+  <!-- vertical tooth hint lines on rings -->
+  <g stroke="#bbb" stroke-width="1">
+    <line x1="120" y1="182" x2="120" y2="298"/><line x1="150" y1="182" x2="150" y2="298"/><line x1="180" y1="182" x2="180" y2="298"/>
+    <line x1="620" y1="182" x2="620" y2="298"/><line x1="650" y1="182" x2="650" y2="298"/><line x1="680" y1="182" x2="680" y2="298"/>
+  </g>
+
+  <!-- labels -->
+  <g font-size="12">
+    <text x="520" y="66">dome + flame (shamash spot)  h 0.077, dia 0.31</text>
+    <text x="520" y="99">R5 top     h 0.123  dia 0.55</text>
+    <text x="620" y="155">R4         h 0.154  dia 1.04</text>
+    <text x="716" y="236">R3 MAIN h 0.292</text>
+    <text x="716" y="252">dia 1.54 (6 m real)</text>
+    <text x="620" y="336">R2         h 0.169  dia 1.04</text>
+    <text x="520" y="397">R1 bottom  h 0.138  dia 0.55</text>
+    <text x="490" y="434">stem       h 0.046  dia 0.38</text>
+  </g>
+
+  <!-- height dimension -->
+  <line x1="60" y1="40" x2="60" y2="440" stroke="#c2283f"/>
+  <text x="20" y="245" fill="#c2283f" transform="rotate(-90 32 245)">H = 1.0</text>
+  <!-- width dimension -->
+  <line x1="92" y1="500" x2="708" y2="500" stroke="#c2283f"/>
+  <line x1="92" y1="492" x2="92" y2="508" stroke="#c2283f"/><line x1="708" y1="492" x2="708" y2="508" stroke="#c2283f"/>
+  <text x="330" y="520" fill="#c2283f">main ring dia = 1.54 H</text>
+
+  <!-- PLAN of tooth edge -->
+  <text x="830" y="24" font-size="16" font-weight="bold">Plan: zigzag (pleated) ring edge, enlarged</text>
+  <path d="M850 260 L870 230 L890 260 L910 230 L930 260 L950 230 L970 260 L990 230 L1010 260 L1030 230 L1050 260 L1070 230 L1090 260 L1110 230 L1130 260 L1150 230 L1170 260 L1190 230 L1210 260"
+        fill="none" stroke="#333" stroke-width="2"/>
+  <line x1="850" y1="290" x2="1210" y2="290" stroke="#999" stroke-dasharray="4 3"/>
+  <text x="850" y="308" fill="#666">core drum surface (smooth cylinder)</text>
+  <text x="850" y="215" fill="#666">outside</text>
+  <!-- face labels -->
+  <path d="M870 230 L890 260" stroke="#f36a1e" stroke-width="5"/>
+  <path d="M890 260 L910 230" stroke="#1f64b4" stroke-width="5"/>
+  <text x="840" y="345">orange stroke = face A (seen walking one way)</text>
+  <text x="840" y="363">blue stroke = face B (seen walking the other way)</text>
+  <text x="840" y="381">head-on you see A and B stripes interleaved</text>
+  <!-- pitch dimension -->
+  <line x1="870" y1="222" x2="910" y2="222" stroke="#c2283f"/>
+  <text x="872" y="205" fill="#c2283f">pitch p</text>
+  <text x="840" y="410">p ≈ 0.028 x main-ring dia (~17 cm real). Same pitch on every ring.</text>
+  <text x="840" y="428">Tooth depth ≈ 0.5 p (faces ~45°). All ESTIMATED from photos.</text>
+  <text x="840" y="446">Teeth per ring (est.): R3 ≈ 112, R2/R4 ≈ 75, R1/R5 ≈ 40.</text>
+  <text x="840" y="476" font-weight="bold">For a ~20 cm print: p ≈ 5-6 mm, depth ≈ 3 mm.</text>
+</svg>

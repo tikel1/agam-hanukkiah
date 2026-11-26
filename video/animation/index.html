@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>אש ומים - טיוטת אנימציה</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  @font-face { font-family: SO; src: url("fonts/SecularOne-Regular.ttf"); }
+  html, body { margin: 0; height: 100%; background: #e9e6dc; font-family: SO, sans-serif; color: #232C5E; overflow: hidden; }
+  #wrap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; background: #F7F5EE; }
+  #stage { display: block; width: 1920px; height: 1080px; }
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 8px 14px; background: #232C5E; color: #fff; direction: ltr; font-size: 15px; }
+  #ui button { background: #F7F5EE; color: #232C5E; border: 0; padding: 4px 12px; border-radius: 4px; font-family: inherit; cursor: pointer; }
+  #ui input[type=range] { flex: 1; }
+  #scenes { display: flex; gap: 4px; }
+  #scenes button { padding: 4px 8px; }
+  body.render #ui { display: none; }
+</style>
+</head>
+<body>
+<div id="wrap"><svg id="stage" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080"></svg></div>
+<div id="ui">
+  <button id="play">▶ play</button>
+  <input id="scrub" type="range" min="0" max="118" step="0.0333333" value="0">
+  <span id="time">0.0 / 118.0</span>
+  <span id="scenes"></span>
+</div>
+<script src="timeline.js"></script>
+<script src="js/lib.js"></script>
+<script src="js/glyphs.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/scenes_a.js"></script>
+<script src="js/scenes_b.js"></script>
+<script>
+"use strict";
+const params = new URLSearchParams(location.search);
+if (params.has("render")) document.body.classList.add("render");
+const wrap = document.getElementById("wrap"), ui = document.getElementById("ui");
+function fit() { const uiH = params.has("render") ? 0 : ui.offsetHeight, k = Math.min(innerWidth / W, (innerHeight - uiH) / H);
+  wrap.style.transform = `scale(${k})`; wrap.style.left = Math.max(0, (innerWidth - W * k) / 2) + "px"; }
+addEventListener("resize", fit);
+
+const scrub = document.getElementById("scrub"), timeEl = document.getElementById("time"), playBtn = document.getElementById("play");
+scrub.max = TL.duration;
+let playing = false, clock0 = 0, t0 = 0, audio = null;
+if (TL.narration) { audio = new Audio(TL.narration); audio.preload = "auto"; }   // stage 5: set "narration" in timeline.json
+function show(t) { seek(t); scrub.value = t; timeEl.textContent = t.toFixed(1) + " / " + TL.duration.toFixed(1); }
+function tick(now) { if (!playing) return; const t = t0 + (now - clock0) / 1000; if (t >= TL.duration) { playing = false; playBtn.textContent = "▶ play"; if (audio) audio.pause(); show(TL.duration - 1e-3); return; } show(t); requestAnimationFrame(tick); }
+playBtn.onclick = () => { playing = !playing; playBtn.textContent = playing ? "❚❚ pause" : "▶ play";
+  if (playing) { t0 = parseFloat(scrub.value); if (t0 >= TL.duration - 0.05) t0 = 0; clock0 = performance.now(); if (audio) { audio.currentTime = t0; audio.play().catch(() => {}); } requestAnimationFrame(tick); } else if (audio) audio.pause(); };
+scrub.oninput = () => { playing = false; playBtn.textContent = "▶ play"; if (audio) audio.pause(); show(parseFloat(scrub.value)); };
+TL.scenes.forEach(s => { const b = document.createElement("button"); b.textContent = s.id; b.title = s.name; b.onclick = () => { scrub.value = s.start; scrub.oninput(); }; document.getElementById("scenes").appendChild(b); });
+document.fonts.load("54px SO").finally(() => { fit(); show(params.has("t") ? parseFloat(params.get("t")) : 0); window.__ready = true; });
+</script>
+</body>
+</html>

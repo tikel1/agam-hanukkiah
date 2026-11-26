@@ -1,0 +1,633 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>חנוכיית אש ומים</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&display=swap">
+<style>
+/* Layout: full-bleed 3D stage; title top-start, one control dock bottom (sheet on phones) */
+:root {
+  --stage: #d9d2c6;
+  --ink: #1d1a17;
+  --ink-soft: #5b544b;
+  --glass: rgba(250, 247, 241, 0.78);
+  --glass-line: rgba(40, 32, 22, 0.14);
+  --chip: rgba(40, 32, 22, 0.07);
+  --accent: #1f64b4;
+  --accent-ink: #ffffff;
+  --flame: #f3a321;
+  --title-day: #2a2119; --title-day-soft: #5e5143; --title-night: #f3eee6; --title-night-soft: #b8ad9f;
+  --font-display: "Secular One", "Assistant", "Arial Hebrew", system-ui, sans-serif;
+  --font-body: "Assistant", "Arial Hebrew", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --stage: #0b0a0d; --ink: #f3eee6; --ink-soft: #b3aa9d;
+    --glass: rgba(20, 18, 22, 0.72); --glass-line: rgba(255, 240, 220, 0.14);
+    --chip: rgba(255, 240, 220, 0.08); --accent: #4a8fe0; --accent-ink: #ffffff; --flame: #f6b23c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --stage: #0b0a0d; --ink: #f3eee6; --ink-soft: #b3aa9d;
+  --glass: rgba(20, 18, 22, 0.72); --glass-line: rgba(255, 240, 220, 0.14);
+  --chip: rgba(255, 240, 220, 0.08); --accent: #4a8fe0; --accent-ink: #ffffff; --flame: #f6b23c;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--stage); color: var(--ink); font-family: var(--font-body);
+  overflow: hidden; position: relative;
+}
+#stage { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+.chrome {
+  position: fixed; inset: 0; pointer-events: none; display: flex; flex-direction: column;
+  justify-content: space-between; gap: 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(14px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-bottom, 0px));
+}
+.title { pointer-events: none; display: grid; gap: 2px; max-width: 34ch; }
+.title h1 {
+  margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(22px, 3.2vw, 34px);
+  line-height: 1.1; text-wrap: balance; text-shadow: 0 1px 12px rgba(0,0,0,.18);
+}
+.title p { margin: 0; color: var(--ink-soft); font-size: 14px; }
+.title h1 { color: var(--title-day); } .title p { color: var(--title-day-soft); }
+.night .title h1 { color: var(--title-night); } .night .title p { color: var(--title-night-soft); }
+.dock {
+  pointer-events: auto; align-self: center; width: min(760px, 100%);
+  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 18px;
+  backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  padding: 12px 14px; display: grid; gap: 10px; box-shadow: 0 10px 40px rgba(0,0,0,.18);
+}
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.row-label { font-size: 13px; color: var(--ink-soft); letter-spacing: .02em; min-width: 9ch; }
+.nights { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; flex: 1; min-width: 0; }
+button {
+  font: 600 15px/1 var(--font-body); color: var(--ink); background: var(--chip);
+  border: 1px solid transparent; border-radius: 11px; padding: 9px 12px; cursor: pointer;
+  transition: background .15s, color .15s, transform .1s; min-height: 38px;
+}
+button:hover { border-color: var(--glass-line); }
+button:active { transform: scale(.97); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.nights button { padding: 9px 0; font-family: var(--font-display); font-weight: 400; font-size: 17px; }
+.nights button[aria-pressed="true"] { background: var(--flame); color: #2a1a05; }
+.seg { display: inline-flex; background: var(--chip); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { background: transparent; min-height: 32px; padding: 7px 11px; }
+.seg button[aria-pressed="true"] { background: var(--accent); }
+.hint { font-size: 12.5px; color: var(--ink-soft); margin: 0; }
+.loader {
+  position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-family: var(--font-display); font-size: 20px; color: var(--ink-soft); transition: opacity .6s;
+}
+.loader.done { opacity: 0; }
+.loader[hidden] { display: none; }
+@media (max-width: 560px) {
+  .dock { border-radius: 16px; padding: 10px; gap: 8px; }
+  .row-label { min-width: 0; width: 100%; }
+  button { font-size: 14px; padding: 8px 10px; }
+  .nights button { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { button { transition: none; } }
+</style>
+
+<canvas id="stage" aria-label="תלת־ממד של החנוכייה, ניתן לסובב ולהגדיל"></canvas>
+<div class="loader" id="loader">טוען את החנוכייה…</div>
+<div class="chrome" dir="rtl" lang="he" id="chrome">
+  <header class="title">
+    <h1>חנוכיית אש ומים</h1>
+    <p>על פי המזרקה של יעקב אגם בכיכר דיזנגוף · הדפסת PETG, צבע אקרילי ביד</p>
+  </header>
+  <section class="dock" aria-label="שליטה בתצוגה">
+    <div class="row">
+      <span class="row-label">לילה של חנוכה</span>
+      <div class="nights" id="nights" role="group" aria-label="בחירת לילה"></div>
+    </div>
+    <div class="row">
+      <div class="seg" role="group" aria-label="גימור">
+        <button id="finish-painted" aria-pressed="true">צבוע</button>
+        <button id="finish-white" aria-pressed="false">הדפסה לבנה</button>
+      </div>
+      <div class="seg" role="group" aria-label="תאורה">
+        <button id="light-night" aria-pressed="true">חושך</button>
+        <button id="light-day" aria-pressed="false">אור יום</button>
+      </div>
+      <div class="seg" role="group" aria-label="זווית מבט">
+        <button data-view="103" data-spot="63" aria-pressed="false" title="HANUKKAH (מרכזו ב־63°), 40° מימינו">ימין 40°</button>
+        <button data-view="0" data-spot="0" aria-pressed="false">חזית</button>
+        <button data-view="-40" data-spot="0" aria-pressed="false" title="מגן הדוד שבחזית, 40° משמאלו">שמאל 40°</button>
+        <button data-view="133.25" data-spot="173.25" aria-pressed="false" title="הסביבון שבגב, 40° משמאלו">סביבון</button>
+        <button data-view="251.5" data-spot="211.5" aria-pressed="false" title="הסופגנייה בגב, 40° מימינה">סופגנייה</button>
+      </div>
+      <button id="toggle-candles" aria-pressed="true">נרות דולקים</button>
+      <button id="toggle-all-candles" aria-pressed="false" title="כבוי: רק הנרות של הלילה הנבחר והשמש">כל הנרות</button>
+      <button id="toggle-rotate" aria-pressed="false">סיבוב אוטומטי</button>
+      <button id="toggle-explode" aria-pressed="false">פירוק לחלקים</button>
+    </div>
+    <p class="hint" id="hint">גוררים כדי לסובב, צובטים או גוללים לזום. הנר החדש נוסף משמאל, מדליקים אותו ראשון.</p>
+  </section>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+/* ---------- model facts: model/out/GLB.md (Y up, metres, front +Z, origin on the table) ---------- */
+const MM = 0.001;
+const MODEL_URL = 'assets/hanukkiah_painted.glb';
+const CANDLE = { radius: 4.6, length: 55, wick: 4.5 };      // mm, a thin Hanukkah candle, 9 mm of it inside the cup
+const CANDLE_SINK = 9;                                       // GLB: each candle sinks 9 mm into its cup
+const ANCHOR_ABOVE_RIM = 0.051;                              // GLB: cup rim is 51 mm below each flame node
+// GLB candle k+1 is slot k: slot 0 front, then counter-clockwise seen from above (towards +X first).
+// Seen from the front the rightmost cup is slot 2, so night 1 is slot 2 and new candles go leftward.
+const NIGHT_ORDER = [2, 1, 0, 7, 6, 5, 4, 3];
+const SHAMASH_SLOT = 8;
+const SLOT_NAMES = ['1', '2', '3', '4', '5', '6', '7', '8', 'shamash'];
+const PARTS = { plinth_stem: 0, spine: 0, drum1_R1: 22, drum2_R2: 48, drum3_R3: 82, drum4_R4: 122, drum5_R5_dome: 160 }; // explode lift, mm
+const CANDLE_WAX = '#3a6fc4';                               // user: every candle blue, shamash too
+const IS_PHONE = Math.min(innerWidth, innerHeight) < 600 || matchMedia('(pointer: coarse)').matches;
+
+/* ---------- renderer, scene, camera ---------- */
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, IS_PHONE ? 1.5 : 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 0.01, 30);
+camera.position.set(0.12, 0.27, 0.62);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(0, 0.085, 0);
+Object.assign(controls, { enableDamping: true, dampingFactor: 0.07, minDistance: 0.16, maxDistance: 1.6,
+  maxPolarAngle: Math.PI * 0.495, autoRotateSpeed: 0.9 });
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.6, 0.55, 0.9);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+/* ---------- procedural textures ---------- */
+function hash(x, y) { const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return s - Math.floor(s); }
+function valueNoise(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function canvasTexture(size, paint, colorSpace = THREE.NoColorSpace) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const ctx = c.getContext('2d'); const img = ctx.createImageData(size, size);
+  paint(img.data, size); ctx.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = colorSpace; t.anisotropy = 8;
+  return t;
+}
+/** Normal map from a height function h(x,y) on a tileable size×size grid. */
+function normalMapFrom(size, heightAt, strength) {
+  const h = new Float32Array(size * size);
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) h[y * size + x] = heightAt(x, y);
+  return canvasTexture(size, (d) => {
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+      const at = (xx, yy) => h[((yy + size) % size) * size + ((xx + size) % size)];
+      const dx = (at(x + 1, y) - at(x - 1, y)) * strength, dy = (at(x, y + 1) - at(x, y - 1)) * strength;
+      const len = Math.hypot(dx, dy, 1), i = (y * size + x) * 4;
+      d[i] = (-dx / len * 0.5 + 0.5) * 255; d[i + 1] = (dy / len * 0.5 + 0.5) * 255; d[i + 2] = (1 / len * 0.5 + 0.5) * 255; d[i + 3] = 255;
+    }
+  });
+}
+const TEX = 256; // one tile = 25.6 mm → 0.1 mm per texel, a 0.2 mm print layer = 2 texels
+const layerHeight = (x, y) => Math.sin((y / 2) * Math.PI) * 0.5;
+const brushHeight = (x, y) => {
+  const streak = valueNoise(x * 0.9, y * 0.012) * 0.9 + valueNoise(x * 2.7, y * 0.03) * 0.35;
+  return streak + valueNoise(x * 0.08, y * 0.08) * 0.6;
+};
+const paintNormal = normalMapFrom(TEX, (x, y) => brushHeight(x, y) * 1.0 + layerHeight(x, y) * 0.25, 1.6);
+const petgNormal = normalMapFrom(TEX, (x, y) => layerHeight(x, y) + valueNoise(x * 0.2, y * 0.2) * 0.1, 0.9);
+const paintRough = canvasTexture(TEX, (d, s) => {
+  for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
+    const v = 150 + (valueNoise(x * 0.9, y * 0.012) - 0.5) * 70 + (valueNoise(x * 0.05, y * 0.05) - 0.5) * 40;
+    const i = (y * s + x) * 4; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255;
+  }
+});
+function woodTexture() {
+  const size = 1024;
+  return canvasTexture(size, (d) => {
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+      const warp = valueNoise(x * 0.004, y * 0.02) * 26 + valueNoise(x * 0.02, y * 0.08) * 3;
+      const ring = Math.sin((y + warp) * 0.11 + valueNoise(x * 0.003, y * 0.003) * 9);
+      const grain = Math.pow(Math.abs(ring), 0.35);
+      const fleck = valueNoise(x * 0.6, y * 0.05) * 0.12;
+      const plank = (Math.floor(y / 256) % 2) * 0.05;
+      const k = 0.55 + grain * 0.32 + fleck - plank;
+      const i = (y * size + x) * 4;
+      d[i] = 118 * k; d[i + 1] = 74 * k; d[i + 2] = 44 * k; d[i + 3] = 255;
+    }
+  }, THREE.SRGBColorSpace);
+}
+
+/* ---------- materials ---------- */
+const petgMat = new THREE.MeshPhysicalMaterial({
+  color: '#e8e6e0', roughness: 0.32, normalMap: petgNormal, normalScale: new THREE.Vector2(0.45, 0.45),
+  clearcoat: 0.25, clearcoatRoughness: 0.25, sheen: 0.2, sheenColor: new THREE.Color('#ffffff'),
+});
+const steelMat = new THREE.MeshPhysicalMaterial({ color: '#d4d6d8', metalness: 1, roughness: 0.34 });
+// user: white cups (the holders), like white enamel, so only the pictures carry colour
+const cupMat = new THREE.MeshPhysicalMaterial({ color: '#f3f1ea', metalness: 0, roughness: 0.3, clearcoat: 0.6, clearcoatRoughness: 0.15 });
+const wickMat = new THREE.MeshStandardMaterial({ color: '#1a1410', roughness: 0.9 });
+
+/** Wax with a warm inner glow near the flame (cheap stand-in for subsurface scattering). */
+function waxMaterial(color) {
+  const mat = new THREE.MeshPhysicalMaterial({ color, roughness: 0.55, sheen: 0.4, sheenColor: new THREE.Color('#fff4dd'), clearcoat: 0.1 });
+  mat.userData.glow = { value: 0 };
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.uGlow = mat.userData.glow;
+    shader.uniforms.uTop = { value: CANDLE.length };
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying float vCandleZ;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvCandleZ = position.z;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying float vCandleZ;\nuniform float uGlow;\nuniform float uTop;')
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        float g = smoothstep(uTop - 16.0, uTop, vCandleZ);
+        totalEmissiveRadiance += vec3(1.0, 0.55, 0.2) * uGlow * g * g * diffuseColor.rgb;`);
+  };
+  mat.customProgramCacheKey = () => 'wax';
+  return mat;
+}
+
+/* ---------- geometry helpers (mm, Z up) ---------- */
+function zLathe(points, segments = 48) {
+  return new THREE.LatheGeometry(points.map(([r, z]) => new THREE.Vector2(r, z)), segments).rotateX(Math.PI / 2);
+}
+function zCylinder(radius, height, segments = 48) {
+  return new THREE.CylinderGeometry(radius, radius, height, segments).rotateX(Math.PI / 2).translate(0, 0, height / 2);
+}
+/** The GLB stores no normals: printed parts get flat faces (crisp pleats), metal gets creased smooth normals. */
+function ensureNormals(mesh, isFlat) {
+  if (mesh.geometry.attributes.normal) return;
+  if (isFlat) {
+    const geo = mesh.geometry.index ? mesh.geometry.toNonIndexed() : mesh.geometry;
+    geo.computeVertexNormals(); mesh.geometry = geo; return;
+  }
+  mesh.geometry = toCreasedNormals(mesh.geometry, THREE.MathUtils.degToRad(35));
+}
+/** Arc-length UVs on side faces, plan UVs on flat faces, 25.6 mm tiles (GLB frame: Y up, metres). */
+function addCylindricalUVs(geo) {
+  const pos = geo.attributes.position, nrm = geo.attributes.normal, n = pos.count;
+  const uv = new Float32Array(n * 2), tile = 1000 / 25.6;
+  for (let f = 0; f + 2 < n; f += 3) {
+    const cx = (pos.getX(f) + pos.getX(f + 1) + pos.getX(f + 2)) / 3, cz = (pos.getZ(f) + pos.getZ(f + 1) + pos.getZ(f + 2)) / 3;
+    const flat = Math.abs(nrm.getY(f)) > 0.7, base = Math.atan2(cz, cx);
+    for (let k = 0; k < 3; k++) {
+      const x = pos.getX(f + k), y = pos.getY(f + k), z = pos.getZ(f + k), i = (f + k) * 2;
+      if (flat) { uv[i] = x * tile; uv[i + 1] = z * tile; continue; }
+      let a = Math.atan2(z, x) - base; a -= Math.round(a / (2 * Math.PI)) * 2 * Math.PI;
+      uv[i] = (base + a) * Math.hypot(x, z) * tile; uv[i + 1] = y * tile;
+    }
+  }
+  geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+}
+
+/* ---------- world: table, model root, lights ---------- */
+const woodMap = woodTexture();
+woodMap.repeat.set(5, 5);
+const table = new THREE.Mesh(new THREE.CircleGeometry(2.2, 96),
+  new THREE.MeshPhysicalMaterial({ map: woodMap, roughness: 0.48, clearcoat: 0.55, clearcoatRoughness: 0.22 }));
+table.rotation.x = -Math.PI / 2; table.receiveShadow = true; scene.add(table);
+
+const contact = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.2), new THREE.MeshBasicMaterial({
+  transparent: true, depthWrite: false, color: '#000000',
+  alphaMap: canvasTexture(128, (d, s) => {
+    for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
+      const r = Math.hypot(x - s / 2, y - s / 2) / (s / 2), i = (y * s + x) * 4;
+      const a = Math.max(0, 1 - Math.pow(Math.max(0, r - 0.52) / 0.48, 0.7));
+      d[i] = d[i + 1] = d[i + 2] = a * 255; d[i + 3] = 255;
+    }
+  }),
+}));
+contact.rotation.x = -Math.PI / 2; contact.position.y = 0.0004; contact.material.opacity = 0.55; scene.add(contact);
+
+const sun = new THREE.DirectionalLight('#fff1dc', 2.1);
+sun.position.set(-0.45, 0.8, 0.5); sun.castShadow = true;
+Object.assign(sun.shadow.camera, { left: -0.18, right: 0.18, top: 0.18, bottom: -0.18, near: 0.3, far: 1.8 });
+sun.shadow.mapSize.setScalar(IS_PHONE ? 1024 : 2048); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.0008; sun.shadow.radius = 4;
+scene.add(sun);
+const fill = new THREE.HemisphereLight('#dfe8ff', '#5a3d26', 0.35); scene.add(fill);
+
+/* ---------- candles: tube, brass cup, wax candle, wick, flame, light ---------- */
+const flameVert = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
+const flameFrag = `
+  varying vec2 vUv; uniform float uTime; uniform float uSeed; uniform float uLife;
+  float n1(float x){ return fract(sin(x*12.9898)*43758.5453); }
+  float sn(float x){ float i=floor(x), f=fract(x); return mix(n1(i), n1(i+1.0), f*f*(3.0-2.0*f)); }
+  void main(){
+    float t = uTime*1.0 + uSeed*17.0;
+    vec2 p = vUv - vec2(0.5, 0.0);
+    float y = p.y;
+    float sway = (sn(t*2.3)-0.5)*0.10*y*y*3.0 + (sn(t*7.1+3.0)-0.5)*0.025*y;
+    p.x -= sway;
+    float h = 0.92 + (sn(t*5.0+1.7)-0.5)*0.12;
+    float yy = y / h;
+    // teardrop: wide rounded base, tapering tip
+    float w = 0.19 * pow(clamp(yy,0.0,1.0), 0.45) * pow(clamp(1.0-yy,0.0,1.0), 0.9) * 1.9;
+    float d = abs(p.x) / max(w, 1e-3);
+    float body = smoothstep(1.0, 0.55, d) * smoothstep(0.0, 0.08, yy) * smoothstep(1.02, 0.7, yy);
+    float core = smoothstep(0.75, 0.0, d) * smoothstep(0.05, 0.25, yy) * smoothstep(0.75, 0.3, yy);
+    float blue = smoothstep(0.7, 0.2, d) * smoothstep(0.24, 0.04, yy) * smoothstep(0.0, 0.06, yy);
+    vec3 col = vec3(1.0, 0.42, 0.08) * body;
+    col = mix(col, vec3(1.0, 0.78, 0.38), smoothstep(0.2, 0.9, body) * 0.8);
+    col += vec3(1.0, 0.95, 0.82) * core * 1.4;
+    col = mix(col, vec3(0.18, 0.32, 1.0) * 0.9, blue * (1.0 - core) * 0.85);
+    float a = clamp(body + blue*0.5, 0.0, 1.0) * uLife;
+    gl_FragColor = vec4(col * 1.9 * uLife, a);
+  }`;
+const flameGeo = new THREE.PlaneGeometry(0.0098, 0.022).translate(0, 0.011 - 0.0012, 0);
+const glowTex = canvasTexture(64, (d, s) => {
+  for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
+    const r = Math.hypot(x - s / 2, y - s / 2) / (s / 2), i = (y * s + x) * 4, a = Math.max(0, 1 - r) ** 2.2;
+    d[i] = 255; d[i + 1] = 170; d[i + 2] = 80; d[i + 3] = a * 255;
+  }
+}, THREE.SRGBColorSpace);
+
+const candles = [];
+/** A wax candle standing in a cup whose rim is at (x, y, rimZ) in the parent's mm frame. */
+function buildCandle(slot, x, y, rimZ, parent) {
+  const g = new THREE.Group(); g.position.set(x, y, 0); parent.add(g);
+  const wax = waxMaterial(CANDLE_WAX);
+  const candle = new THREE.Mesh(zLathe([[0, 0], [CANDLE.radius, 0], [CANDLE.radius - 0.1, CANDLE.length - 1.6], [CANDLE.radius - 0.6, CANDLE.length], [3.0, CANDLE.length - 0.5], [1.2, CANDLE.length - 1.1], [0, CANDLE.length - 1.0]], 32), wax);
+  candle.position.z = rimZ - 0.3;
+  const wick = new THREE.Mesh(zCylinder(0.45, CANDLE.wick, 8), wickMat);
+  wick.position.z = rimZ - 0.3 + CANDLE.length - 1.2; wick.rotation.x = 0.12;
+  for (const m of [candle, wick]) { m.castShadow = true; m.receiveShadow = true; g.add(m); }
+  const anchor = new THREE.Object3D(); anchor.position.z = rimZ - 0.3 + CANDLE.length + CANDLE.wick - 1.8; g.add(anchor);
+
+  const flame = new THREE.Mesh(flameGeo, new THREE.ShaderMaterial({
+    vertexShader: flameVert, fragmentShader: flameFrag, transparent: true, depthWrite: false, blending: THREE.NormalBlending,
+    uniforms: { uTime: { value: 0 }, uSeed: { value: Math.random() }, uLife: { value: 0 } },
+  }));
+  flame.renderOrder = 10; scene.add(flame);
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0 }));
+  halo.scale.setScalar(0.07); scene.add(halo);
+  const light = new THREE.PointLight('#ffb15c', 0, 0, 2); scene.add(light);
+  candles[slot] = { slot, group: g, anchor, flame, halo, light, wax, life: 0, target: 0, seed: Math.random() * 100 };
+  return g;
+}
+/** Candles go on the GLB's flame anchors; each candle group rides with its ring when exploded. */
+function buildCandlesFromModel(root) {
+  SLOT_NAMES.forEach((name, slot) => {
+    const anchor = root.getObjectByName(`flame_${name}`);
+    if (!anchor) throw new Error(`GLB has no flame_${name} node`);
+    const rim = anchor.getWorldPosition(new THREE.Vector3()).sub(new THREE.Vector3(0, ANCHOR_ABOVE_RIM, 0));
+    const holder = new THREE.Group();
+    holder.position.copy(rim); holder.rotation.x = -Math.PI / 2; holder.scale.setScalar(MM);
+    partNodes[name === 'shamash' ? 'drum5_R5_dome' : 'drum3_R3'].add(holder);
+    buildCandle(slot, 0, 0, -CANDLE_SINK + 0.3, holder);
+  });
+}
+// One shadow-casting light follows the lit flames' centroid; per-candle lights stay shadowless.
+const shadowLight = new THREE.PointLight('#ffb25e', 0, 0, 2);
+shadowLight.castShadow = true; shadowLight.shadow.mapSize.setScalar(IS_PHONE ? 512 : 1024);
+shadowLight.shadow.bias = -0.002; shadowLight.shadow.radius = 6; shadowLight.shadow.camera.near = 0.005;
+scene.add(shadowLight);
+
+/* ---------- loading the model ---------- */
+const partNodes = {};
+const printedMeshes = [];
+const paintCache = new Map();
+/** Satin acrylic over PETG: the GLB's paint colour, brushed normal + roughness, a thin clear coat. */
+/** glb_export.py writes the paint hex values straight into baseColorFactor (glTF expects linear), so read them as sRGB. */
+const paintColour = (gltfMat) => gltfMat.color.clone().convertSRGBToLinear();
+function paintFor(gltfMat) {
+  if (!paintCache.has(gltfMat.name)) {
+    const bare = gltfMat.name === 'paint_00_bare';
+    paintCache.set(gltfMat.name, bare ? petgMat.clone() : new THREE.MeshPhysicalMaterial({
+      color: paintColour(gltfMat), roughness: 0.45, roughnessMap: paintRough, normalMap: paintNormal,
+      normalScale: new THREE.Vector2(0.35, 0.35), clearcoat: 0.18, clearcoatRoughness: 0.35,
+    }));
+    if (bare) paintCache.get(gltfMat.name).color.copy(paintColour(gltfMat));
+  }
+  return paintCache.get(gltfMat.name);
+}
+function materialFor(mesh) {
+  const name = mesh.material.name;
+  if (name === 'metal_steel') return steelMat;
+  if (name === 'metal_brass') return cupMat;
+  return paintFor(mesh.material);
+}
+/** The published page carries the GLB inline (build.py); the source page fetches it from assets/. */
+async function readGltf() {
+  const inline = document.getElementById('glb-data');
+  if (!inline) return new GLTFLoader().loadAsync(MODEL_URL);
+  const bytes = Uint8Array.from(atob(inline.textContent.trim()), (ch) => ch.charCodeAt(0));
+  return new GLTFLoader().parseAsync(bytes.buffer, '');
+}
+async function loadModel() {
+  const gltf = await readGltf();
+  const root = gltf.scene;
+  for (const name of Object.keys(PARTS)) {
+    const node = root.getObjectByName(name);
+    if (!node) throw new Error(`GLB has no ${name} node`);
+    node.userData.lift = PARTS[name]; partNodes[name] = node;
+  }
+  root.getObjectByName('candles').visible = false; // preview candles: ours are animated
+  for (const slot of SLOT_NAMES) {
+    const part = partNodes[slot === 'shamash' ? 'drum5_R5_dome' : 'drum3_R3'];
+    for (const kind of ['washer', 'cup']) { const m = root.getObjectByName(`${kind}_${slot}`); if (m) part.attach(m); }
+  }
+  root.traverse((o) => {
+    if (!o.isMesh || !o.visible || o.parent?.name === 'candles') return;
+    o.castShadow = o.receiveShadow = true;
+    ensureNormals(o, Object.prototype.hasOwnProperty.call(PARTS, o.parent?.name) && !o.material.name.startsWith('metal_'));
+    const isPrinted = Object.prototype.hasOwnProperty.call(PARTS, o.parent?.name) && !o.material.name.startsWith('metal_');
+    if (isPrinted) { addCylindricalUVs(o.geometry); o.userData.painted = materialFor(o); printedMeshes.push(o); }
+    o.material = materialFor(o);
+  });
+  scene.add(root);
+  buildCandlesFromModel(root);
+}
+
+/* ---------- state + UI ---------- */
+const state = { night: 8, allCandles: false, painted: true, dark: true, lit: true, explode: false, explodeT: 0 };
+const HEB = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ז׳', 'ח׳'];
+const nightsEl = document.getElementById('nights');
+HEB.forEach((label, i) => {
+  const b = document.createElement('button'); b.id = `night-${i + 1}`; b.textContent = label;
+  b.setAttribute('aria-label', `לילה ${label}`); b.addEventListener('click', () => setNight(i + 1)); nightsEl.append(b);
+});
+const press = (el, on) => (typeof el === 'string' ? document.getElementById(el) : el).setAttribute('aria-pressed', String(on));
+let lightingTimers = [];
+function lightSequence() {
+  lightingTimers.forEach(clearTimeout); lightingTimers = [];
+  candles.forEach((c) => { c.target = 0; });
+  if (!state.lit) return;
+  const shamash = candles[SHAMASH_SLOT], order = NIGHT_ORDER.slice(0, state.night).reverse();
+  const stepMs = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 420;
+  lightingTimers.push(setTimeout(() => { shamash.target = 1; }, 150));
+  order.forEach((slot, i) => lightingTimers.push(setTimeout(() => { candles[slot].target = 1; }, 150 + stepMs * (i + 1))));
+}
+/** Each night only its own candles stand in the cups (plus the shamash); the rest of the cups stay empty. */
+function showCandles() {
+  const tonight = new Set([...NIGHT_ORDER.slice(0, state.night), SHAMASH_SLOT]);
+  candles.forEach((c) => { c.group.visible = state.allCandles || tonight.has(c.slot); });
+}
+function setNight(n) {
+  state.night = n;
+  HEB.forEach((_, i) => press(`night-${i + 1}`, i + 1 === n));
+  showCandles(); lightSequence();
+}
+function setAllCandles(on) { state.allCandles = on; press('toggle-all-candles', on); showCandles(); }
+function setPainted(on) {
+  state.painted = on; press('finish-painted', on); press('finish-white', !on);
+  for (const mesh of printedMeshes) mesh.material = on ? mesh.userData.painted : petgMat;
+}
+function backdrop(inner, outer) {
+  const c = document.createElement('canvas'); c.width = c.height = 512;
+  const ctx = c.getContext('2d'), g = ctx.createRadialGradient(256, 300, 20, 256, 280, 420);
+  g.addColorStop(0, inner); g.addColorStop(1, outer); ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 512);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const DAY_BG = backdrop('#e8e1d5', '#a99d8c'), NIGHT_BG = backdrop('#1c130c', '#040304');
+const DAY_FOG = new THREE.Color('#c9bfb0'), NIGHT_FOG = new THREE.Color('#0d0907');
+function setDark(on) {
+  state.dark = on; press('light-night', on); press('light-day', !on);
+  document.getElementById('chrome').classList.toggle('night', on);
+  scene.background = on ? NIGHT_BG : DAY_BG;
+  scene.fog = new THREE.Fog(on ? NIGHT_FOG : DAY_FOG, on ? 0.5 : 0.9, on ? 1.4 : 2.2);
+  scene.environmentIntensity = on ? 0.07 : 0.35;
+  sun.visible = !on; fill.intensity = on ? 0.03 : 0.35;
+  fill.color.set(on ? '#ffb070' : '#dfe8ff'); fill.groundColor.set(on ? '#2a1608' : '#5a3d26');
+  renderer.toneMappingExposure = on ? 1.15 : 0.72;
+  bloom.strength = on ? 0.55 : 0.3; bloom.threshold = on ? 0.7 : 0.95; bloom.radius = on ? 0.6 : 0.4;
+  contact.material.opacity = on ? 0.35 : 0.55;
+}
+function setLit(on) { state.lit = on; press('toggle-candles', on); lightSequence(); }
+function setRotate(on) { controls.autoRotate = on; press('toggle-rotate', on); }
+function setExplode(on) { state.explode = on; press('toggle-explode', on); }
+document.getElementById('finish-painted').onclick = () => setPainted(true);
+document.getElementById('finish-white').onclick = () => setPainted(false);
+document.getElementById('light-night').onclick = () => setDark(true);
+document.getElementById('light-day').onclick = () => setDark(false);
+document.getElementById('toggle-candles').onclick = () => setLit(!state.lit);
+document.getElementById('toggle-all-candles').onclick = () => setAllCandles(!state.allCandles);
+document.getElementById('toggle-rotate').onclick = () => setRotate(!controls.autoRotate);
+document.getElementById('toggle-explode').onclick = () => setExplode(!state.explode);
+
+/* ---------- camera presets: R3 carries two pictures, each read from 40 deg to one side of its spot.
+   Azimuth = concept angle (0 front, counter-clockwise from above towards +X). HANUKKAH (right faces, centred at 63)
+   reads from its right (63 + 40 = 103), the Magen David (left faces, 0) from its left (-40),
+   the dreidel (left faces, 182) from its left (142), the fountain disc (right faces, 211.5) from its right (251.5). ---------- */
+const VIEW_DISTANCE = 0.5, VIEW_ELEVATION_DEG = 10, VIEW_TARGET_Y = 0.085;
+const viewButtons = [...document.querySelectorAll('[data-view]')];
+let viewTween = null;
+const VIEW_SPOT_SHIFT = 0.045; // m: aim part-way towards the motif's spot on R3 so it sits mid-frame
+function goToView(azimuthDeg, spotDeg) {
+  setRotate(false);
+  const az = THREE.MathUtils.degToRad(azimuthDeg), el = THREE.MathUtils.degToRad(VIEW_ELEVATION_DEG);
+  const to = new THREE.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el))
+    .multiplyScalar(VIEW_DISTANCE);
+  const spot = THREE.MathUtils.degToRad(spotDeg);
+  const target = new THREE.Vector3(Math.sin(spot) * VIEW_SPOT_SHIFT, VIEW_TARGET_Y, Math.cos(spot) * VIEW_SPOT_SHIFT);
+  to.add(target);
+  viewTween = { from: camera.position.clone(), fromTarget: controls.target.clone(), to, toTarget: target, start: performance.now(), t: 0 };
+  viewButtons.forEach((b) => press(b, Number(b.dataset.view) === azimuthDeg));
+}
+viewButtons.forEach((b) => { b.onclick = () => goToView(Number(b.dataset.view), Number(b.dataset.spot)); });
+controls.addEventListener('start', () => { viewTween = null; viewButtons.forEach((b) => press(b, false)); });
+const VIEW_TWEEN_MS = 900;
+function updateViewTween() {
+  if (!viewTween) return;
+  viewTween.t = Math.min(1, (performance.now() - viewTween.start) / VIEW_TWEEN_MS);
+  const k = viewTween.t * viewTween.t * (3 - 2 * viewTween.t);
+  const target = viewTween.toTarget;
+  // swing around the axis (spherical lerp) rather than cutting through the model
+  const a = viewTween.from.clone().sub(viewTween.fromTarget), b = viewTween.to.clone().sub(target);
+  const sa = new THREE.Spherical().setFromVector3(a), sb = new THREE.Spherical().setFromVector3(b);
+  let dTheta = sb.theta - sa.theta; dTheta = Math.atan2(Math.sin(dTheta), Math.cos(dTheta));
+  const s = new THREE.Spherical(sa.radius + (sb.radius - sa.radius) * k, sa.phi + (sb.phi - sa.phi) * k, sa.theta + dTheta * k);
+  controls.target.lerpVectors(viewTween.fromTarget, target, k);
+  camera.position.setFromSpherical(s).add(controls.target);
+  if (viewTween.t >= 1) viewTween = null;
+}
+
+/* ---------- frame loop ---------- */
+const tmp = new THREE.Vector3(), centroid = new THREE.Vector3();
+function flicker(t, seed) {
+  return 0.78 + 0.12 * Math.sin(t * 9.1 + seed) + 0.07 * Math.sin(t * 23.7 + seed * 1.7) + 0.05 * Math.sin(t * 3.3 + seed * 0.3);
+}
+const CANDLE_CANDELA = 0.004;
+function updateCandles(t, dt) {
+  let total = 0; centroid.set(0, 0, 0);
+  for (const c of candles) {
+    c.life += (c.target - c.life) * Math.min(1, dt * (c.target > c.life ? 3.5 : 6));
+    const f = flicker(t, c.seed) * c.life;
+    c.anchor.getWorldPosition(tmp);
+    c.flame.position.copy(tmp);
+    c.flame.rotation.y = Math.atan2(camera.position.x - tmp.x, camera.position.z - tmp.z);
+    c.flame.scale.setScalar(0.35 + 0.65 * c.life);
+    c.flame.material.uniforms.uTime.value = t; c.flame.material.uniforms.uLife.value = c.life;
+    c.flame.visible = c.life > 0.01;
+    c.halo.position.copy(tmp).y += 0.009; c.halo.material.opacity = 0.09 * f * (state.dark ? 1 : 0.35);
+    c.light.position.copy(tmp).y += 0.008; c.light.intensity = CANDLE_CANDELA * 0.55 * f;
+    c.wax.userData.glow.value = 0.8 * f;
+    total += f; centroid.addScaledVector(tmp, f);
+  }
+  if (total > 0.01) { shadowLight.position.copy(centroid.divideScalar(total)).y += 0.012; }
+  shadowLight.intensity = CANDLE_CANDELA * 0.45 * total;
+}
+function updateExplode(dt) {
+  state.explodeT += ((state.explode ? 1 : 0) - state.explodeT) * Math.min(1, dt * 4);
+  const e = state.explodeT * state.explodeT * (3 - 2 * state.explodeT);
+  for (const g of Object.values(partNodes)) g.position.y = g.userData.lift * MM * e;
+  controls.target.y = 0.085 + 0.07 * e;
+}
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false); composer.setSize(w, h); bloom.resolution.set(w, h);
+  camera.aspect = w / h;
+  camera.fov = w / h < 0.8 ? 44 : 32; camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+const clock = new THREE.Clock();
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  updateExplode(dt); updateViewTween(); updateCandles(t, dt); controls.update(); composer.render();
+  requestAnimationFrame(frame);
+}
+
+async function start() {
+  resize(); setDark(true);
+  try { await loadModel(); }
+  catch (err) {
+    console.error('Model load failed', err);
+    document.getElementById('loader').textContent = 'לא הצלחנו לטעון את המודל. נסו לרענן את הדף.';
+    return;
+  }
+  setPainted(true); setNight(8);
+  const loaderEl = document.getElementById('loader'); loaderEl.classList.add('done'); setTimeout(() => { loaderEl.hidden = true; }, 700);
+  frame();
+}
+window.__viewer = { partNodes, printedMeshes, state, scene, camera, controls, renderer, candles, setDark, setNight, setAllCandles, setPainted, setLit, setExplode, setRotate }; // console handle for tweaking views
+start();
+</script>

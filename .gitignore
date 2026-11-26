@@ -1,0 +1,27 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+node_modules/
+.env
+.env.*
+
+# Video v2 working output (rebuildable): review stills and render parts
+video/v2/engine/_stills/
+video/v2/engine/films/**/parts/
+
+# Video v1 (superseded by v2): raw narration takes and mixes
+video/final/clips/
+video/final/clips_el/
+video/final/clips_el2/
+video/final/clips_el3/
+video/final/*.wav
+
+# Model preview parts (rebuilt by plaque.py)
+model/out/_plaque_preview/
+
+# Logs
+*.log
+
+# Local tooling
+.claude/

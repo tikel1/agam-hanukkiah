@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>glyph test</title>
+<style>@font-face{font-family:SO;src:url("fonts/SecularOne-Regular.ttf")}body{margin:0;background:#F7F5EE}</style>
+<svg id="stage" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+<script src="timeline.js"></script><script src="js/lib.js"></script><script src="js/glyphs.js"></script>
+<script>
+const words=[["יעקב","אגם"],["פולימורף"],["אש","ומים"],["חנוכה"],["ללמוד"],["בינה"],["הדפסה"],["חנוכיית","אש","ומים"]];
+let s=""; words.forEach((w,i)=>{s+=title(w,i%2?1440:480,40+Math.floor(i/2)*250,130,99,0)});
+s+=title(["1986"],480,1050-120,70,99,0,{rtl:false}) ;
+document.getElementById("stage").innerHTML='<rect width="1920" height="1080" fill="#F7F5EE"/>'+s;
+window.__ready=true; function seek(){}
+</script>

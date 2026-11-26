@@ -1,0 +1,151 @@
+{
+ "positive_global_styles": [
+  "cinematic children's documentary underscore",
+  "warm",
+  "acoustic",
+  "hopeful",
+  "instrumental",
+  "smooth transitions between sections"
+ ],
+ "negative_global_styles": [
+  "vocals",
+  "singing",
+  "lyrics",
+  "aggressive",
+  "loud drums"
+ ],
+ "sections": [
+  {
+   "section_name": "Quiet reflection",
+   "positive_local_styles": [
+    "slow solo piano, tender, respectful, gently sad but warm, sparse"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 10000,
+   "lines": []
+  },
+  {
+   "section_name": "Curious fold",
+   "positive_local_styles": [
+    "light playful marimba and pizzicato, curious, wonder, bouncy but soft"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 10000,
+   "lines": []
+  },
+  {
+   "section_name": "City fountain",
+   "positive_local_styles": [
+    "gentle harp and glockenspiel, flowing, a sense of place and wonder, medium-slow"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 11000,
+   "lines": []
+  },
+  {
+   "section_name": "Water and fire",
+   "positive_local_styles": [
+    "flowing arpeggios building to a warm swelling fire, rising strings, dramatic but kind"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 9000,
+   "lines": []
+  },
+  {
+   "section_name": "Hanukkah glow",
+   "positive_local_styles": [
+    "warm hopeful festive melody emerging, a hint of Jewish folk modal color, glowing, building gently"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 16000,
+   "lines": []
+  },
+  {
+   "section_name": "Learning",
+   "positive_local_styles": [
+    "steady light curious groove, soft plucked strings and piano, studious and bright"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 11000,
+   "lines": []
+  },
+  {
+   "section_name": "New idea",
+   "positive_local_styles": [
+    "modern playful sparkle, light electronic plucks with soft strings, inventive, optimistic"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 11000,
+   "lines": []
+  },
+  {
+   "section_name": "The big reveal",
+   "positive_local_styles": [
+    "surprise then bright comedic joy, bouncy, cheerful, a playful twist"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 10000,
+   "lines": []
+  },
+  {
+   "section_name": "Printing",
+   "positive_local_styles": [
+    "light rhythmic pulsing mechanical feel, soft marimba ostinato, hopeful and clean"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 10000,
+   "lines": []
+  },
+  {
+   "section_name": "Making it",
+   "positive_local_styles": [
+    "busy upbeat crafting energy, gently accelerating, happy, hand-made feeling"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 10000,
+   "lines": []
+  },
+  {
+   "section_name": "Finale",
+   "positive_local_styles": [
+    "triumphant warm emotional resolution, full soft strings and piano, festive Hanukkah joy, ends with a gentle sustained final chord"
+   ],
+   "negative_local_styles": [
+    "vocals",
+    "harsh drums"
+   ],
+   "duration_ms": 10000,
+   "lines": []
+  }
+ ]
+}

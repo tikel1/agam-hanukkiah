@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="he">
+<head>
+<meta charset="utf-8">
+<title>Film player</title>
+<style>
+  @font-face { font-family: "Secular One"; src: url("assets/fonts/SecularOne-Regular.ttf"); }
+  :root { --paper: #F7F5EE; --ink: #232C5E; }
+  html, body { margin: 0; height: 100%; background: #14172b; overflow: hidden; }
+  /* width and height come from the film's timeline.size (set in player.js) */
+  #frame { position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; }
+  #stage { position: absolute; left: 0; top: 0; display: block; }
+  #subtitles { position: absolute; inset: 0; pointer-events: none; }
+  .subtitle {
+    position: absolute; left: 50%; bottom: calc(var(--frame-height) * 0.16); transform: translate(-50%, 0); width: max-content; max-width: 84%; opacity: 0;
+    font: 54px/1.25 "Secular One", sans-serif; text-align: center; white-space: pre-line;
+  }
+  /* two stacked copies: a thick halo in the background colour under the text (readable over any picture) */
+  .subtitle span { display: block; }
+  .subtitle .halo { position: absolute; inset: 0; color: var(--paper); -webkit-text-stroke: 14px var(--paper); }
+  .subtitle .text { position: relative; color: var(--ink); }
+  .subtitle.on-dark .halo { color: var(--ink); -webkit-text-stroke-color: var(--ink); }
+  .subtitle.on-dark .text { color: var(--paper); }
+  #controls {
+    position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 10px 16px;
+    background: rgba(20, 23, 43, 0.92); color: #F7F5EE; font: 14px system-ui, sans-serif;
+  }
+  #controls input[type=range] { flex: 1; }
+  #controls button { font: inherit; padding: 4px 14px; }
+  body.render #controls { display: none; }
+  #error { position: fixed; inset: 20px; color: #ffb4a8; font: 16px/1.5 monospace; white-space: pre-wrap; display: none; }
+</style>
+</head>
+<body>
+<div id="frame"><canvas id="stage"></canvas><div id="subtitles"></div></div>
+<div id="controls">
+  <button id="play" type="button">Play</button>
+  <input id="scrub" type="range" min="0" max="1" step="0.001" value="0" aria-label="Time">
+  <span id="clock">0.00</span>
+  <label><input id="blur" type="checkbox"> motion blur</label>
+</div>
+<pre id="error"></pre>
+<script type="module" src="src/player.js"></script>
+</body>
+</html>

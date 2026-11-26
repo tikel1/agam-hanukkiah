@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דף צבעים: חנוכיית אגם</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5f5f5f;
+    --line: #cfcfcf;
+    --paper: #ffffff;
+    --head: #f3f3f3;
+    --warn: #A8322A;
+    --bare: repeating-linear-gradient(45deg, #ffffff 0 3px, #c9c9c9 3px 6px);
+  }
+  @page { size: A4; margin: 9mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto; padding: 16px; max-width: 192mm;
+    background: var(--paper); color: var(--ink);
+    font-family: "Segoe UI", Arial, "Noto Sans Hebrew", sans-serif; font-size: 11.5px; line-height: 1.35;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  h1 { font-size: 19px; margin: 0; }
+  h2 { font-size: 13px; margin: 9px 0 5px; border-bottom: 2px solid var(--ink); padding-bottom: 2px; }
+  .sub { color: var(--muted); margin: 2px 0 0; }
+  .top { display: flex; gap: 14px; align-items: flex-start; }
+  .top > div:first-child { flex: 1; }
+  .names { display: flex; gap: 14px; margin-top: 6px; }
+  .names span { flex: 1; border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+  .figure { flex: 0 0 190px; text-align: center; font-size: 10px; color: var(--muted); }
+  .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .swatch { border: 1px solid var(--line); border-radius: 5px; overflow: hidden; display: flex; }
+  .swatch .chip { flex: 0 0 26px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .swatch .meta { padding: 2px 4px; font-size: 9px; color: var(--muted); }
+  .swatch .meta b { display: block; font-size: 11px; color: var(--ink); }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { border: 1px solid var(--line); padding: 3px 4px; text-align: center; vertical-align: middle; }
+  th { background: var(--head); font-size: 10.5px; }
+  td.part { text-align: right; font-weight: 700; white-space: nowrap; width: 1%; }
+  td.part small { display: block; font-weight: 400; color: var(--muted); }
+  td.who { width: 46px; }
+  td.done { width: 26px; }
+  .seq { display: flex; gap: 2px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .seq.ltr { direction: ltr; }
+  .seq small { color: var(--muted); width: 100%; font-size: 9.5px; direction: rtl; }
+  .dot { flex: 0 0 auto; min-width: 19px; height: 19px; padding: 0 3px; border-radius: 3px; font-weight: 700; font-size: 11px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 2px; }
+  .dot span { font-weight: 400; font-size: 9.5px; }
+  .white { box-shadow: inset 0 0 0 1px #999; }
+  .tick { display: inline-block; width: 13px; height: 13px; border: 1.5px solid var(--ink); border-radius: 2px; }
+  .bare { background: var(--bare); color: var(--ink); }
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 14px; margin: 0; padding-right: 16px; }
+  .warn { border: 2px solid var(--warn); border-radius: 6px; padding: 4px 8px; margin-top: 7px; font-weight: 700; }
+  .page { break-before: page; page-break-before: always; margin-top: 28px; }
+  .emblems { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .emblem { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .emblem .stage { height: 92px; display: flex; align-items: center; justify-content: center; }
+  .emblem .info { padding: 4px 6px; font-size: 10.5px; line-height: 1.4; }
+  .emblem .info b { display: block; font-size: 12px; }
+  .emblem .info .row { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-top: 3px; }
+  .steps td { text-align: right; }
+  .steps td.n { text-align: center; width: 24px; font-weight: 700; }
+  .steps td.look { color: var(--muted); font-size: 10.5px; }
+  .tips { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .tip { border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; }
+  .tip b { display: block; margin-bottom: 2px; }
+  .maps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+  .map { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; text-align: center; }
+  .map img { width: 100%; height: 92px; object-fit: contain; object-position: top; display: block; background: #fff; }
+  .map .cap { padding: 2px 5px; font-size: 10px; display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+  .map .cap b { font-size: 11px; }
+  .howto { margin: 0; padding-right: 18px; }
+  .howto li { margin-bottom: 3px; }
+  @media (max-width: 640px) {
+    .top { flex-direction: column; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+    .emblems, .maps { grid-template-columns: repeat(2, 1fr); }
+    .rules, .tips { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { padding: 0; }
+    .page { margin-top: 0; }
+    h2 { margin: 6px 0 4px; }
+    td, th { padding: 2px 3px; }
+  }
+</style>
+</head>
+<body>
+  <!-- ======================= PAGE 1 ======================= -->
+  <div class="top">
+    <div>
+      <h1>🕎 דף צבעים: חנוכיית "אש ומים"</h1>
+      <p class="sub">הצבעים של המזרקה של יעקב אגם. <b>בכל שן יש פאה שמאלית ופאה ימנית.</b> על כל הפאות השמאליות צובעים <b>תמונה A</b> (רואים אותה משמאל), ועל הימניות <b>תמונה B</b> (רואים מימין). <b>פאה אחרי פאה: לפי המפות</b> (דף 3). מסמנים ✓ בכל חלק שנגמר.</p>
+      <div class="names"><span>שם: </span><span>החלקים שלי: </span></div>
+    </div>
+    <div class="figure">
+      <svg viewBox="0 0 190 70" width="190" height="70" role="img" aria-label="שיניים במבט מלמעלה: פאות שמאליות צהובות, פאות ימניות כחולות">
+        <g stroke="#1a1a1a" stroke-width="1.2" stroke-linejoin="round" id="teeth"></g>
+        <text x="30" y="66" font-size="9" text-anchor="middle" fill="#5f5f5f">← משמאל: A</text>
+        <text x="160" y="66" font-size="9" text-anchor="middle" fill="#5f5f5f">מימין: B →</text>
+      </svg>
+      <div>השיניים במבט מלמעלה: שני צדדים, שתי תמונות</div>
+    </div>
+  </div>
+
+  <h2>15 הצבעים של המזרקה (המספרים זהים למפות)</h2>
+  <div class="palette" id="palette"></div>
+
+  <h2>מה צובעים בכל טבעת (מלמטה למעלה). משמאל לימין מהחזית, ×מספר = כמה שיניים ברצף</h2>
+  <table>
+    <thead><tr><th>חלק</th><th>תמונה A: פאות שמאליות</th><th>תמונה B: פאות ימניות</th><th>מי</th><th>✓</th></tr></thead>
+    <tbody id="rings"></tbody>
+  </table>
+
+  <h2>שאר החלקים</h2>
+  <table>
+    <tbody id="others"></tbody>
+  </table>
+
+  <h2>כללי זהב</h2>
+  <ul class="rules">
+    <li>קודם טבעת הניסיון: כל דבר מנסים עליה לפני R3</li>
+    <li>צד אחד בכל פעם: כל תמונה A, ייבוש, ואז תמונה B</li>
+    <li>מסתכלים על הטבעת מהצד שצובעים: הצד השני מתחבא</li>
+    <li>רק מפה אחת על השולחן: A או B</li>
+    <li>בהיר קודם, כחול ונייבי אחרונים</li>
+    <li>הקודקוד של השן הוא קיר: הטוש נעצר בו</li>
+    <li>שכבות דקות, מלמטה למעלה. 15 דקות בין שכבות</li>
+    <li>לבן (1) = לא צובעים, נשאר מהפריימר</li>
+  </ul>
+  <div class="warn">⚠️ כל המשטחים העליונים נשארים לבנים: לא צובעים. וגם לא את מושבי הדסקיות, החור באמצע, החיבורים והכיסים מתחת לרגל.</div>
+
+  <!-- ======================= PAGE 2 ======================= -->
+  <section class="page">
+    <h1>🧪 דף 2: טבעת ניסיון, והסמלים</h1>
+    <p class="sub"><b>טבעת הניסיון</b> (<bdi dir="ltr">test_ring_R3_60</bdi>) היא R3 שלמה ב־60% (Ø108), עם כל הסמלים במקומם. עליה מנסים הכול לפני R3. מפות: <bdi dir="ltr">map_test_ring_R3_60_A_left / _B_right</bdi>; בהן 10 שיניים = 42 מ"מ. צובעים אותה ב־PC-3M. <b>חלופה:</b> הקופון, פרוסה של R3 בגודל אמיתי עם מושב גביע אמיתי.</p>
+
+    <h2>על טבעת הניסיון: מה בודקים</h2>
+    <table class="steps">
+      <thead><tr><th>#</th><th>מה עושים</th><th>מה צריך לראות</th><th>✓</th></tr></thead>
+      <tbody id="coupon"></tbody>
+    </table>
+
+    <h2>הסמלים על R3: כל אחד על צד אחד בלבד</h2>
+    <div class="emblems" id="emblems"></div>
+
+    <h2>טיפים לסמלים</h2>
+    <div class="tips">
+      <div class="tip"><b>〰️ הקו הדק הוא הגבול</b>לאורך כל סמל יש קו בולט עדין. צובעים מבפנים החוצה, עד הקו. בפרוסות צרות PC-1MR. אם על הקופון זה לא הצליח: נייר מיסוך גמיש שנשען על הקו.</div>
+      <div class="tip"><b>🟨 רקע קודם</b>צהוב על כל הרקע, גם מתחת למגן הדוד ולגוף הסביבון. ירוק וכתום מכסים צהוב. רק ה־ג נשארת לבנה.</div>
+      <div class="tip"><b>🔤 HANUKKAH משמאל לימין</b>H, A, N, U, K, K, A, H, על הרצועה הלבנה. ככה היד לא נשענת על צבע רטוב. החור ב־A והפנים של ה־U נשארים לבנים.</div>
+      <div class="tip"><b>🔪 פרוסה אחרי פרוסה</b>השיניים חותכות כל סמל לפרוסות. מקרוב זה נראה כמו פסים מוזרים: רק מהצד, ממרחק צעד, הוא מתחבר.</div>
+    </div>
+  </section>
+
+  <!-- ======================= PAGE 3 ======================= -->
+  <section class="page">
+    <h1>🗺️ דף 3: שתי מפות לכל טבעת</h1>
+    <p class="sub">בתיקייה <bdi dir="ltr">model/out/maps/</bdi> יש לכל טבעת מפה <b>A</b> (פאות שמאליות) ומפה <b>B</b> (פאות ימניות): הטבעת "פרושה" לפס ישר, כל מלבן בין שני קווים אפורים הוא שן אחת, והמספר הוא הצבע של הפאה בצד הזה. בלי מספר = לבן.</p>
+
+    <h2>איך משתמשים במפה</h2>
+    <ol class="howto">
+      <li>🧑 <b>מדפיסים ב־100% ("גודל ממשי")</b>, לא "התאם לדף". בדיקה: 10 שיניים במפה (מ־t10 ל־t20) = <b>70 מ"מ</b> בסרגל.</li>
+      <li>🧑 <b>מסמנים "חזית" על כל טבעת:</b> מרכיבים "יבש" על הציר (נכנס רק בכיוון אחד), ומסמנים חץ בעיפרון על השפה התחתונה של כל טבעת, מתחת לנר 1 (אמצע מגן הדוד).</li>
+      <li><b>גוזרים את הפסים</b> ומחברים שורה לשורה לפי אותיות החפיפה (המלבנים המקווקווים הם אותן שיניים).</li>
+      <li><b>מצמידים את הפס לטבעת</b>, ממש מתחת לשיניים, ו<b>מיישרים את ▼ FRONT מול החץ</b>.</li>
+      <li><b>מפה אחת, צבע אחד:</b> רק A על השולחן (פאות שמאליות). מוצאים את כל המלבנים במספר הזה, וצובעים את הרצפים מסביב לטבעת.</li>
+      <li><b>מסמנים ✓ על כל פאה שגמרו.</b> בתחילת וסוף כל רצף בודקים את מספר השן (t20, t25...).</li>
+    </ol>
+
+    <h2>המפות (להדפסה: הקבצים המלאים, לא התמונות הקטנות כאן). הקופון: <bdi dir="ltr">map_test_coupon_R3.png</bdi></h2>
+    <div class="maps" id="maps"></div>
+    <div class="warn">⚠️ במפה של R3 יש שני דפים לכל תמונה. במפת המבט מלמעלה: הכול לבן, והעיגולים המקווקווים הם המושבים של הדסקיות.</div>
+  </section>
+
+<script>
+  // Mirrors model/colour_program.py + fountain_colours.py (the 1986 fountain palette). The maps are the master.
+  const COLOURS = [
+    { id: 1,  key: "white",      name: "לבן",       hex: "#F4F1E4", text: "#1a1a1a", posca: "White",            acrylic: "הפריימר הלבן" },
+    { id: 2,  key: "yellow",     name: "צהוב",      hex: "#F2C94C", text: "#1a1a1a", posca: "Sunshine Yellow",  acrylic: "Azo Yellow Med. 269" },
+    { id: 3,  key: "orange",     name: "כתום",      hex: "#E8893F", text: "#1a1a1a", posca: "Light Orange",     acrylic: "Azo Orange 276 + לבן" },
+    { id: 4,  key: "coral",      name: "אלמוג",     hex: "#E8655C", text: "#1a1a1a", posca: "Coral Pink",       acrylic: "Pyrrole Red 315 + לבן" },
+    { id: 5,  key: "brick",      name: "לבנה",      hex: "#A8322A", text: "#ffffff", posca: "אין: אקריליק",     acrylic: "Naphthol Red Deep 399" },
+    { id: 6,  key: "rose",       name: "ורוד־סלמון", hex: "#DC8A86", text: "#1a1a1a", posca: "Salmon Pink",      acrylic: "Persian Rose 330 + לבן" },
+    { id: 7,  key: "lilac",      name: "לילך",      hex: "#9A8CC0", text: "#1a1a1a", posca: "Lavender",         acrylic: "Blue Violet 568 + לבן" },
+    { id: 8,  key: "periwinkle", name: "פריווינקל", hex: "#7484C4", text: "#ffffff", posca: "אין: אקריליק",     acrylic: "Ultramarine + 568 + לבן" },
+    { id: 9,  key: "light_blue", name: "תכלת",      hex: "#A3C1E0", text: "#1a1a1a", posca: "Light Blue",       acrylic: "Sky Blue Light 551" },
+    { id: 10, key: "blue",       name: "כחול",      hex: "#3E5FB0", text: "#ffffff", posca: "Blue",             acrylic: "Ultramarine 504" },
+    { id: 11, key: "navy",       name: "נייבי",     hex: "#2B2F6B", text: "#ffffff", posca: "Navy Blue",        acrylic: "Ultramarine + Prussian" },
+    { id: 12, key: "mint",       name: "מנטה",      hex: "#A8DDB5", text: "#1a1a1a", posca: "Mint",             acrylic: "Turq. Green Light 660" },
+    { id: 13, key: "teal",       name: "טורקיז",    hex: "#3E8F7C", text: "#ffffff", posca: "Emerald Green",    acrylic: "Turquoise Green 661" },
+    { id: 14, key: "green",      name: "ירוק",      hex: "#4E9E5E", text: "#ffffff", posca: "Green",            acrylic: "Perm. Green Light 618" },
+    { id: 15, key: "grey",       name: "אפור",      hex: "#A9B3B6", text: "#1a1a1a", posca: "לא בשימוש כרגע",   acrylic: "(הרגל לבנה)" },
+  ];
+  const LIGHT_HEX = new Set(["#F4F1E4"]);
+  const BARE = "bare";
+  const byKey = Object.fromEntries(COLOURS.map(colour => [colour.key, colour]));
+
+  // Runs of faces from the front tooth (t0), left to right, from model/paint_program.face_table.
+  // R3 B includes the white band under HANUKKAH (-28.5° to 154.5°). Motifs are listed in the note.
+  const RINGS = [
+    { part: "R1", note: "27 שיניים",
+      a: [["coral", 1], ["orange", 2], ["yellow", 2], ["green", 2], ["teal", 3], ["brick", 2], ["coral", 2], ["orange", 2], ["yellow", 3], ["green", 2], ["teal", 2], ["brick", 2], ["coral", 2]],
+      aNote: "מעבר צבעים בלי לבן, פעמיים מסביב",
+      b: [["brick", 1], ["coral", 2], ["orange", 2], ["yellow", 2], ["green", 3], ["teal", 2], ["brick", 2], ["coral", 2], ["orange", 3], ["yellow", 2], ["green", 2], ["teal", 2], ["brick", 2]],
+      bNote: "אותו מעבר, צעד אחד לפני A" },
+    { part: "R2", note: "50 שיניים",
+      a: [["coral", 1], ["brick", 4], ["navy", 5], ["blue", 4], ["light_blue", 4], ["orange", 4], ["coral", 4], ["brick", 4], ["navy", 5], ["blue", 4], ["light_blue", 4], ["orange", 4], ["coral", 3]],
+      aNote: "מעבר צבעים בלי לבן, פעמיים מסביב",
+      b: [["orange", 1], ["coral", 4], ["brick", 5], ["navy", 4], ["blue", 4], ["light_blue", 4], ["orange", 4], ["coral", 4], ["brick", 5], ["navy", 4], ["blue", 4], ["light_blue", 4], ["orange", 3]],
+      bNote: "אותו מעבר, צעד אחד לפני A" },
+    { part: "R3", note: "80 שיניים + 3 סמלים וסופגנייה",
+      a: [["yellow", 10], ["rose", 4], ["coral", 8], ["orange", 12], ["yellow", 16], ["lilac", 2], ["rose", 10], ["orange", 4], ["yellow", 14]],
+      aNote: "+ מגן דוד ירוק בחזית, סביבון כתום (בלי אות) מאחור (על הצהוב)",
+      b: [["white", 52], ["lilac", 3], ["periwinkle", 19], ["white", 6]],
+      bNote: "+ HANUKKAH כחול על הלבן, באותיות של פאות שלמות: מתחילה 9° משמאל לחזית (t78) ונמשכת עד 135° (t29). + סופגנייה כתומה עם ריבה (לבנה) על הלבן מאחור (194° עד 230°)" },
+    { part: "R4", note: "31 שיניים",
+      a: [["white", 7], ["teal", 3], ["mint", 4], ["white", 9], ["mint", 2], ["teal", 4], ["white", 2]],
+      b: [["coral", 2], ["lilac", 5], ["white", 7], ["coral", 5], ["rose", 4], ["white", 6], ["coral", 2]] },
+    { part: "R5", note: "16 שיניים, השמש",
+      a: [["lilac", 2], ["yellow", 2], ["orange", 3], ["lilac", 3], ["yellow", 2], ["orange", 3], ["lilac", 1]],
+      b: [["light_blue", 1], ["white", 6], ["light_blue", 2], ["white", 6], ["light_blue", 1]] },
+  ];
+
+  const OTHER_PARTS = [
+    { part: "רגל",                items: [[BARE, "כולה לבנה, לא צובעים"]] },
+    { part: "כל המשטחים העליונים", items: [[BARE, "לבנים, לא צובעים"]] },
+    { part: "ציר, דסקיות, גביעים", items: [[BARE, "לא צובעים"]] },
+  ];
+
+  // Concept angle 0 = front. Each motif sits on one face set only; no outline, a fine raised guide line along its edge.
+  const EMBLEMS = [
+    { title: "HANUKKAH", where: "B, פאות ימניות: רואים מימין · מ־9°− עד 135°", fill: "blue", ground: "white", shape: "word" },
+    { title: "מגן דוד",  where: "A, פאות שמאליות: רואים משמאל · 0°", fill: "green", ground: "yellow", shape: "star" },
+    { title: "סביבון",   where: "A, פאות שמאליות: רואים משמאל · 173°", fill: "orange", ground: "yellow", shape: "dreidel" },
+    { title: "סופגנייה", where: "B, פאות ימניות: רואים מימין · אחור, 212°", fill: "orange", ground: "white", shape: "sufganiyah" },
+  ];
+
+  const COUPON = [
+    ["הכנה מלאה ופריימר. רשת 4×4 בסכין על התחתית, סלוטייפ, תלישה", "אף משבצת לא יורדת; הקו הדק עדיין מורגש"],
+    ["מצמידים את המפה ומשווים את הקווים הדקים", "הקווים עוברים בדיוק לאורך הסמלים שבמפה. אם לא: עוצרים לפני R3"],
+    ["פאה אחת עם נייר מיסוך שנשען על הקו הדק, פאה שכנה \"עד הקו\" בלי נייר", "קו חד, בלי זליגה; בוחרים שיטה"],
+    ["תמונה A: צהוב ואז מגן הדוד בירוק. ייבוש. תמונה B: האותיות בכחול", "מ־40° שמאלה מהחזית: מגן דוד בלי כחול. מ־40° ימינה: HANU, והמילה כולה כשהולכים ימינה"],
+    ["2 ו־3 שכבות; פס של לבנה ופריווינקל מהערבוב", "כמה שכבות בכל צבע; הגוונים קרובים לדף"],
+    ["🧑 לכה: חצי בספריי, חצי במכחול", "לא נמרח, לא מתקמט, לא חלבי"],
+    ["🧑 חום: רק על הקופון (יש בו חור לבורג), או בבדיקת השריפה המלאה. דסקית, גביע, נר אחד עד הסוף", "המדרגה ליד הדסקית לא התרככה, לא הבריקה ולא הריחה"],
+    ["טיפות שעווה, קירור, כרטיס פלסטיק", "השעווה יורדת בלי צבע"],
+  ];
+
+  const MAPS = [
+    ["map_test_ring_R3_60_A_left.png", "ניסיון 60%", "A"], ["map_test_ring_R3_60_B_right.png", "ניסיון 60%", "B"],
+    ["map_R1_A_left.png", "R1", "A"], ["map_R1_B_right.png", "R1", "B"],
+    ["map_R2_A_left.png", "R2", "A"], ["map_R2_B_right.png", "R2", "B"],
+    ["map_R3_A_left.png", "R3", "A, דף 1"], ["map_R3_A_left_page2.png", "R3", "A, דף 2"],
+    ["map_R3_B_right.png", "R3", "B, דף 1"], ["map_R3_B_right_page2.png", "R3", "B, דף 2"],
+    ["map_R4_A_left.png", "R4", "A"], ["map_R4_B_right.png", "R4", "B"],
+    ["map_R5_A_left.png", "R5", "A"], ["map_R5_B_right.png", "R5", "B"],
+    ["map_tops_stem.png", "מלמעלה + רגל", "הכול לבן"],
+  ];
+  const MAPS_DIR = "../model/out/maps/";
+
+  const el = (tag, attrs = {}, children = []) => {
+    const node = document.createElement(tag);
+    Object.entries(attrs).forEach(([key, value]) => {
+      if (key === "style") Object.assign(node.style, value);
+      else node.setAttribute(key, value);
+    });
+    children.forEach(child => node.append(child));
+    return node;
+  };
+
+  const svgEl = (tag, attrs, children = []) => {
+    const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+    children.forEach(child => node.append(child));
+    return node;
+  };
+
+  const getColour = key => {
+    const colour = byKey[key];
+    if (!colour) throw new Error(`Unknown colour in chart: ${key}`);
+    return colour;
+  };
+
+  const colourStyle = colour => ({ background: colour.hex, color: colour.text });
+
+  const dot = (key, label = "") => {
+    if (key === BARE) return el("span", { class: "dot bare" }, [label || "לא צובעים"]);
+    const colour = getColour(key);
+    const cls = LIGHT_HEX.has(colour.hex) ? "dot white" : "dot";
+    const children = label ? [String(colour.id), el("span", {}, [label])] : [String(colour.id)];
+    return el("span", { class: cls, style: colourStyle(colour), title: colour.name }, children);
+  };
+
+  const tickCell = () => el("td", { class: "done" }, [el("span", { class: "tick" })]);
+
+  const partCell = (name, note) =>
+    el("td", { class: "part" }, note ? [name, el("small", {}, [note])] : [name]);
+
+  const renderTeeth = () => {
+    const root = document.getElementById("teeth");
+    const left = ["yellow", "yellow", "rose", "coral", "orange", "orange"];
+    const right = ["white", "teal", "blue", "blue", "white", "periwinkle"];
+    left.forEach((key, index) => {
+      const x = 8 + index * 29;
+      root.append(svgEl("polygon", { points: `${x},50 ${x + 14.5},14 ${x + 14.5},50`, fill: getColour(key).hex }));
+      root.append(svgEl("polygon", { points: `${x + 14.5},14 ${x + 29},50 ${x + 14.5},50`, fill: getColour(right[index]).hex }));
+    });
+  };
+
+  const renderPalette = () => {
+    const root = document.getElementById("palette");
+    COLOURS.forEach(colour => root.append(
+      el("div", { class: "swatch" }, [
+        el("div", { class: "chip" + (LIGHT_HEX.has(colour.hex) ? " white" : ""), style: colourStyle(colour) }, [String(colour.id)]),
+        el("div", { class: "meta" }, [
+          el("b", {}, [colour.name]),
+          `Posca: ${colour.posca}`,
+          el("br"), colour.acrylic,
+        ]),
+      ])
+    ));
+  };
+
+  // Left to right, like the ring and the map: the first chip is the run at the front (t0).
+  const runCell = (runs, note) => el("td", {}, [el("div", { class: "seq ltr" }, [
+    ...runs.map(([key, count]) => dot(key, `×${count}`)),
+    ...(note ? [el("small", {}, [note])] : []),
+  ])]);
+
+  const renderRings = () => {
+    const body = document.getElementById("rings");
+    RINGS.forEach(ring => body.append(el("tr", {}, [
+      partCell(ring.part, ring.note),
+      runCell(ring.a, ring.aNote),
+      runCell(ring.b, ring.bNote),
+      el("td", { class: "who" }),
+      tickCell(),
+    ])));
+  };
+
+  const renderOthers = () => {
+    const body = document.getElementById("others");
+    OTHER_PARTS.forEach(item => body.append(el("tr", {}, [
+      partCell(item.part, ""),
+      el("td", {}, [el("div", { class: "seq" }, item.items.map(([key, label]) => dot(key, label)))]),
+      el("td", { class: "who" }),
+      tickCell(),
+    ])));
+  };
+
+  const graphicSvg = emblem => {
+    const fill = getColour(emblem.fill).hex;
+    const graphics = {
+      word: () => [svgEl("text", { x: "0", y: "6", "text-anchor": "middle", "font-size": "14", "font-weight": "900", direction: "ltr",
+        "letter-spacing": "3", "font-family": "Arial Black, Segoe UI, Arial, sans-serif", fill }, ["HANUKKAH"])],
+      star: () => [
+        svgEl("polygon", { points: "0,-26 22.5,13 -22.5,13", fill }),
+        svgEl("polygon", { points: "0,26 22.5,-13 -22.5,-13", fill }),
+      ],
+      dreidel: () => [
+        svgEl("path", { d: "M-4,-28 h8 v6 h14 v22 l-18,24 l-18,-24 v-22 h14 z", fill }),
+      ],
+      disc: () => [svgEl("circle", { cx: "0", cy: "0", r: "24", fill })],
+      sufganiyah: () => [
+        svgEl("ellipse", { cx: "0", cy: "0", rx: "30", ry: "14", fill }),
+        svgEl("ellipse", { cx: "0", cy: "-6", rx: "8", ry: "5", fill: getColour("brick").hex }),
+      ],
+    };
+    const build = graphics[emblem.shape];
+    if (!build) throw new Error(`Unknown emblem shape: ${emblem.shape}`);
+    return build();
+  };
+
+  const emblemSvg = emblem => {
+    const wide = emblem.shape === "word";
+    const svg = svgEl("svg", { viewBox: wide ? "-56 -14 112 28" : "-34 -32 68 64", width: wide ? "150" : "100", height: wide ? "38" : "86" });
+    graphicSvg(emblem).forEach(node => svg.append(node));
+    return svg;
+  };
+
+  const renderEmblems = () => {
+    const root = document.getElementById("emblems");
+    EMBLEMS.forEach(emblem => {
+      const extra = emblem.second ? [dot(emblem.second, emblem.secondLabel)] : [];
+      root.append(el("div", { class: "emblem" }, [
+        el("div", { class: "stage", style: { background: getColour(emblem.ground).hex } }, [emblemSvg(emblem)]),
+        el("div", { class: "info" }, [
+          el("b", {}, [el("bdi", {}, [emblem.title])]),
+          el("div", {}, [emblem.where]),
+          el("div", { class: "row" }, ["סמל:", dot(emblem.fill, getColour(emblem.fill).name), ...extra]),
+          el("div", { class: "row" }, ["רקע:", dot(emblem.ground, getColour(emblem.ground).name)]),
+          el("div", { class: "row" }, ["מי:", el("span", { style: { flex: "1", borderBottom: "1px solid #1a1a1a", height: "13px" } }), el("span", { class: "tick" })]),
+        ]),
+      ]));
+    });
+  };
+
+  const renderCoupon = () => {
+    const body = document.getElementById("coupon");
+    COUPON.forEach(([action, look], index) => body.append(el("tr", {}, [
+      el("td", { class: "n" }, [String(index + 1)]),
+      el("td", {}, [action]),
+      el("td", { class: "look" }, [look]),
+      tickCell(),
+    ])));
+  };
+
+  const renderMaps = () => {
+    const root = document.getElementById("maps");
+    MAPS.forEach(([file, title, note]) => root.append(el("div", { class: "map" }, [
+      el("img", { src: MAPS_DIR + file, alt: `מפת צביעה ${title} ${note}` }),
+      el("div", { class: "cap" }, [el("b", {}, [title]), el("span", {}, [note]), el("span", { class: "tick" })]),
+    ])));
+  };
+
+  renderTeeth();
+  renderPalette();
+  renderRings();
+  renderOthers();
+  renderEmblems();
+  renderCoupon();
+  renderMaps();
+</script>
+</body>
+</html>
