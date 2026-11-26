@@ -56,18 +56,29 @@ body {
 .title h1 { color: var(--title-day); } .title p { color: var(--title-day-soft); }
 .night .title h1 { color: var(--title-night); } .night .title p { color: var(--title-night-soft); }
 .dock {
-  pointer-events: auto; align-self: center; width: min(760px, 100%);
+  pointer-events: auto; align-self: center; width: min(1080px, 100%); position: relative;
   background: var(--glass); border: 1px solid var(--glass-line); border-radius: 18px;
   backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  padding: 12px 14px; display: grid; gap: 10px; box-shadow: 0 10px 40px rgba(0,0,0,.18);
+  padding: 8px 12px 12px; display: grid; gap: 8px; box-shadow: 0 10px 40px rgba(0,0,0,.18);
 }
+.dock.collapsed { width: auto; padding: 4px; border-radius: 999px; }
+.dock-toggle {
+  justify-self: center; display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; min-height: 30px; padding: 4px 14px; font-size: 14px; color: var(--ink-soft);
+}
+.dock.collapsed .dock-toggle { color: var(--ink); min-height: 40px; padding: 6px 18px; font-size: 15px; }
+.chev { width: 8px; height: 8px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-2px, -2px); }
+.dock.collapsed .chev { transform: rotate(-135deg) translate(-2px, -2px); }
+.dock-body { display: grid; gap: 8px; }
+.dock-body[hidden] { display: none; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: center; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.row-label { font-size: 13px; color: var(--ink-soft); letter-spacing: .02em; min-width: 9ch; }
+.row-label { font-size: 13px; color: var(--ink-soft); letter-spacing: .02em; }
 .nights { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; flex: 1; min-width: 0; }
 button {
   font: 600 15px/1 var(--font-body); color: var(--ink); background: var(--chip);
   border: 1px solid transparent; border-radius: 11px; padding: 9px 12px; cursor: pointer;
-  transition: background .15s, color .15s, transform .1s; min-height: 38px;
+  transition: background .15s, color .15s, transform .1s; min-height: 38px; white-space: nowrap;
 }
 button:hover { border-color: var(--glass-line); }
 button:active { transform: scale(.97); }
@@ -75,10 +86,9 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
 .nights button { padding: 9px 0; font-family: var(--font-display); font-weight: 400; font-size: 17px; }
 .nights button[aria-pressed="true"] { background: var(--flame); color: #2a1a05; }
-.seg { display: inline-flex; background: var(--chip); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg { display: inline-flex; flex: none; background: var(--chip); border-radius: 12px; padding: 3px; gap: 2px; }
 .seg button { background: transparent; min-height: 32px; padding: 7px 11px; }
 .seg button[aria-pressed="true"] { background: var(--accent); }
-.hint { font-size: 12.5px; color: var(--ink-soft); margin: 0; }
 .loader {
   position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none;
   font-family: var(--font-display); font-size: 20px; color: var(--ink-soft); transition: opacity .6s;
@@ -86,10 +96,21 @@ button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink
 .loader.done { opacity: 0; }
 .loader[hidden] { display: none; }
 @media (max-width: 560px) {
-  .dock { border-radius: 16px; padding: 10px; gap: 8px; }
-  .row-label { min-width: 0; width: 100%; }
-  button { font-size: 14px; padding: 8px 10px; }
-  .nights button { font-size: 16px; }
+  .title h1 { font-size: 21px; }
+  .title p { font-size: 12.5px; }
+  .dock { border-radius: 16px; padding: 4px 8px 8px; gap: 6px; }
+  .dock-body { gap: 6px; }
+  .controls { display: grid; gap: 6px; }
+  /* each group is one line that scrolls sideways instead of wrapping into a tall sheet */
+  .controls .row {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 6px;
+    margin-inline: -8px; padding-inline: 8px; scroll-padding-inline: 8px;
+  }
+  .controls .row::-webkit-scrollbar { display: none; }
+  button { font-size: 14px; padding: 7px 10px; min-height: 34px; }
+  .seg { padding: 2px; }
+  .seg button { min-height: 30px; padding: 6px 9px; }
+  .nights button { font-size: 16px; padding: 7px 0; }
 }
 @media (prefers-reduced-motion: reduce) { button { transition: none; } }
 </style>
@@ -101,38 +122,43 @@ button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink
     <h1>חנוכיית אש ומים</h1>
     <p>על פי המזרקה של יעקב אגם בכיכר דיזנגוף · הדפסת PETG, צבע אקרילי ביד</p>
   </header>
-  <section class="dock" aria-label="שליטה בתצוגה">
-    <div class="row">
-      <span class="row-label">לילה של חנוכה</span>
-      <div class="nights" id="nights" role="group" aria-label="בחירת לילה"></div>
+  <section class="dock" id="dock" aria-label="שליטה בתצוגה">
+    <button class="dock-toggle" id="dock-toggle" aria-expanded="true" aria-controls="dock-body">
+      <span id="dock-toggle-label">הסתר</span><span class="chev" aria-hidden="true"></span>
+    </button>
+    <div class="dock-body" id="dock-body">
+      <div class="row">
+        <span class="row-label">לילה</span>
+        <div class="nights" id="nights" role="group" aria-label="בחירת לילה"></div>
+      </div>
+      <div class="controls">
+        <div class="row">
+          <div class="seg" role="group" aria-label="תאורה">
+            <button id="light-day" aria-pressed="true">אור יום</button>
+            <button id="light-night" aria-pressed="false">חושך</button>
+          </div>
+          <div class="seg" role="group" aria-label="גימור">
+            <button id="finish-painted" aria-pressed="true">צבוע</button>
+            <button id="finish-white" aria-pressed="false">הדפסה לבנה</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="seg" role="group" aria-label="זווית מבט">
+            <button data-view="103" data-spot="63" aria-pressed="false" title="HANUKKAH (מרכזו ב־63°), 40° מימינו">ימין 40°</button>
+            <button data-view="0" data-spot="0" aria-pressed="false">חזית</button>
+            <button data-view="-40" data-spot="0" aria-pressed="false" title="מגן הדוד שבחזית, 40° משמאלו">שמאל 40°</button>
+            <button data-view="133.25" data-spot="173.25" aria-pressed="false" title="הסביבון שבגב, 40° משמאלו">סביבון</button>
+            <button data-view="251.5" data-spot="211.5" aria-pressed="false" title="הסופגנייה בגב, 40° מימינה">סופגנייה</button>
+          </div>
+        </div>
+        <div class="row">
+          <button id="toggle-candles" aria-pressed="true">נרות דולקים</button>
+          <button id="toggle-all-candles" aria-pressed="false" title="כבוי: רק הנרות של הלילה הנבחר והשמש">כל הנרות</button>
+          <button id="toggle-rotate" aria-pressed="false" title="סיבוב אוטומטי">סיבוב</button>
+          <button id="toggle-explode" aria-pressed="false" title="פירוק לחלקים">פירוק</button>
+        </div>
+      </div>
     </div>
-    <div class="row">
-      <div class="seg" role="group" aria-label="גימור">
-        <button id="finish-painted" aria-pressed="true">צבוע</button>
-        <button id="finish-white" aria-pressed="false">הדפסה לבנה</button>
-      </div>
-      <div class="seg" role="group" aria-label="תאורה">
-        <button id="light-night" aria-pressed="true">חושך</button>
-        <button id="light-day" aria-pressed="false">אור יום</button>
-      </div>
-      <div class="seg" role="group" aria-label="רקע">
-        <button data-bg="white" aria-pressed="false">סטודיו לבן</button>
-        <button data-bg="grey" aria-pressed="false">סטודיו אפור</button>
-        <button data-bg="table" aria-pressed="true">שולחן</button>
-      </div>
-      <div class="seg" role="group" aria-label="זווית מבט">
-        <button data-view="103" data-spot="63" aria-pressed="false" title="HANUKKAH (מרכזו ב־63°), 40° מימינו">ימין 40°</button>
-        <button data-view="0" data-spot="0" aria-pressed="false">חזית</button>
-        <button data-view="-40" data-spot="0" aria-pressed="false" title="מגן הדוד שבחזית, 40° משמאלו">שמאל 40°</button>
-        <button data-view="133.25" data-spot="173.25" aria-pressed="false" title="הסביבון שבגב, 40° משמאלו">סביבון</button>
-        <button data-view="251.5" data-spot="211.5" aria-pressed="false" title="הסופגנייה בגב, 40° מימינה">סופגנייה</button>
-      </div>
-      <button id="toggle-candles" aria-pressed="true">נרות דולקים</button>
-      <button id="toggle-all-candles" aria-pressed="false" title="כבוי: רק הנרות של הלילה הנבחר והשמש">כל הנרות</button>
-      <button id="toggle-rotate" aria-pressed="false">סיבוב אוטומטי</button>
-      <button id="toggle-explode" aria-pressed="false">פירוק לחלקים</button>
-    </div>
-    <p class="hint" id="hint">גוררים כדי לסובב, צובטים או גוללים לזום. הנר החדש נוסף משמאל, מדליקים אותו ראשון.</p>
   </section>
 </div>
 
@@ -237,22 +263,6 @@ const paintRough = canvasTexture(TEX, (d, s) => {
     const i = (y * s + x) * 4; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255;
   }
 });
-function woodTexture() {
-  const size = 1024;
-  return canvasTexture(size, (d) => {
-    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-      const warp = valueNoise(x * 0.004, y * 0.02) * 26 + valueNoise(x * 0.02, y * 0.08) * 3;
-      const ring = Math.sin((y + warp) * 0.11 + valueNoise(x * 0.003, y * 0.003) * 9);
-      const grain = Math.pow(Math.abs(ring), 0.35);
-      const fleck = valueNoise(x * 0.6, y * 0.05) * 0.12;
-      const plank = (Math.floor(y / 256) % 2) * 0.05;
-      const k = 0.55 + grain * 0.32 + fleck - plank;
-      const i = (y * size + x) * 4;
-      d[i] = 118 * k; d[i + 1] = 74 * k; d[i + 2] = 44 * k; d[i + 3] = 255;
-    }
-  }, THREE.SRGBColorSpace);
-}
-
 /* ---------- materials ---------- */
 const petgMat = new THREE.MeshPhysicalMaterial({
   color: '#e8e6e0', roughness: 0.32, normalMap: petgNormal, normalScale: new THREE.Vector2(0.45, 0.45),
@@ -316,12 +326,7 @@ function addCylindricalUVs(geo) {
   geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
 }
 
-/* ---------- world: table, model root, lights ---------- */
-const woodMap = woodTexture();
-woodMap.repeat.set(5, 5);
-const table = new THREE.Mesh(new THREE.CircleGeometry(2.2, 96),
-  new THREE.MeshPhysicalMaterial({ map: woodMap, roughness: 0.48, clearcoat: 0.55, clearcoatRoughness: 0.22 }));
-table.rotation.x = -Math.PI / 2; table.receiveShadow = true; scene.add(table);
+/* ---------- world: white studio, model root, lights ---------- */
 
 const contact = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.2), new THREE.MeshBasicMaterial({
   transparent: true, depthWrite: false, color: '#000000',
@@ -493,7 +498,7 @@ async function loadModel() {
 }
 
 /* ---------- state + UI ---------- */
-const state = { bg: 'table', night: 8, allCandles: false, painted: true, dark: true, lit: true, explode: false, explodeT: 0 };
+const state = { bg: 'white', night: 8, allCandles: false, painted: true, dark: false, lit: true, explode: false, explodeT: 0 };
 const HEB = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ז׳', 'ח׳'];
 const nightsEl = document.getElementById('nights');
 HEB.forEach((label, i) => {
@@ -526,38 +531,19 @@ function setPainted(on) {
   state.painted = on; press('finish-painted', on); press('finish-white', !on);
   for (const mesh of printedMeshes) mesh.material = on ? mesh.userData.painted : petgMat;
 }
-function backdrop(inner, outer) {
-  const c = document.createElement('canvas'); c.width = c.height = 512;
-  const ctx = c.getContext('2d'), g = ctx.createRadialGradient(256, 300, 20, 256, 280, 420);
-  g.addColorStop(0, inner); g.addColorStop(1, outer); ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 512);
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-}
-const DAY_BG = backdrop('#e8e1d5', '#a99d8c'), NIGHT_BG = backdrop('#1c130c', '#040304');
-const DAY_FOG = new THREE.Color('#c9bfb0'), NIGHT_FOG = new THREE.Color('#0d0907');
-// [day, night] per studio: backdrop top, horizon (= floor = fog), shadow strength
-const STUDIOS = {
-  white: [{ top: '#ffffff', horizon: '#ecebe8', shadow: 0.2 }, { top: '#24221f', horizon: '#3a3733', shadow: 0.45 }],
-  grey: [{ top: '#d4d6d8', horizon: '#a3a6a9', shadow: 0.26 }, { top: '#131416', horizon: '#26272a', shadow: 0.5 }],
-};
-const bgButtons = [...document.querySelectorAll('[data-bg]')];
+// The white studio, [day, night]: backdrop top, horizon (= floor = fog), shadow strength
+const STUDIO = [{ top: '#ffffff', horizon: '#ecebe8', shadow: 0.2 }, { top: '#24221f', horizon: '#3a3733', shadow: 0.45 }];
 function applyBackground() {
-  const on = state.dark, studio = STUDIOS[state.bg]?.[on ? 1 : 0];
-  table.visible = !studio; studioFloor.visible = studioShadow.visible = studioDome.visible = !!studio;
-  bgButtons.forEach((b) => press(b, b.dataset.bg === state.bg));
-  if (!studio) {
-    scene.background = on ? NIGHT_BG : DAY_BG;
-    scene.fog = new THREE.Fog(on ? NIGHT_FOG : DAY_FOG, on ? 0.5 : 0.9, on ? 1.4 : 2.2);
-    return;
-  }
+  const look = STUDIO[state.dark ? 1 : 0];
   scene.background = null;
-  studioDome.material.uniforms.uTop.value.set(studio.top);
-  studioDome.material.uniforms.uHorizon.value.set(studio.horizon);
-  studioFloor.material.color.set(studio.horizon);
-  studioShadow.material.opacity = studio.shadow;
-  scene.fog = new THREE.Fog(studio.horizon, 0.7, 2.4);
+  studioDome.material.uniforms.uTop.value.set(look.top);
+  studioDome.material.uniforms.uHorizon.value.set(look.horizon);
+  studioFloor.material.color.set(look.horizon);
+  studioShadow.material.opacity = look.shadow;
+  scene.fog = new THREE.Fog(look.horizon, 0.7, 2.4);
 }
-function setBackground(name) { state.bg = name; applyBackground(); }
-bgButtons.forEach((b) => { b.onclick = () => setBackground(b.dataset.bg); });
+/** Kept for render_stills.py; the white studio is the only background now. */
+function setBackground() { state.bg = 'white'; applyBackground(); }
 function setDark(on) {
   state.dark = on; press('light-night', on); press('light-day', !on);
   document.getElementById('chrome').classList.toggle('night', on);
@@ -580,6 +566,31 @@ document.getElementById('toggle-candles').onclick = () => setLit(!state.lit);
 document.getElementById('toggle-all-candles').onclick = () => setAllCandles(!state.allCandles);
 document.getElementById('toggle-rotate').onclick = () => setRotate(!controls.autoRotate);
 document.getElementById('toggle-explode').onclick = () => setExplode(!state.explode);
+
+/* ---------- dock: collapses to one small pill; phones start collapsed so the model fills the screen ---------- */
+const DOCK_KEY = 'agam-viewer-dock-open', PHONE_DOCK_WIDTH = 560;
+const dockEl = document.getElementById('dock'), titleEl = document.querySelector('.title');
+const dockToggle = document.getElementById('dock-toggle'), dockBody = document.getElementById('dock-body');
+function readDockPref() {
+  try { const v = localStorage.getItem(DOCK_KEY); return v === null ? null : v === '1'; } catch { return null; }
+}
+function setDockOpen(open) {
+  dockEl.classList.toggle('collapsed', !open); dockBody.hidden = !open;
+  dockToggle.setAttribute('aria-expanded', String(open));
+  document.getElementById('dock-toggle-label').textContent = open ? 'הסתר' : 'אפשרויות';
+  try { localStorage.setItem(DOCK_KEY, open ? '1' : '0'); } catch { /* storage blocked: the choice lasts this visit only */ }
+  updateFraming();
+}
+dockToggle.onclick = () => setDockOpen(dockBody.hidden);
+
+/** Shift the picture up so the model sits in the middle of the space between the title and the dock. */
+function updateFraming() {
+  const h = innerHeight, w = innerWidth, dock = dockEl.getBoundingClientRect(), title = titleEl.getBoundingClientRect();
+  const top = title.height ? title.bottom : 0, bottom = dock.height ? dock.top : h;
+  const shift = Math.round(h / 2 - (top + bottom) / 2);
+  if (shift === 0) camera.clearViewOffset(); else camera.setViewOffset(w, h, 0, shift, w, h);
+}
+new ResizeObserver(updateFraming).observe(dockEl);
 
 /* ---------- camera presets: R3 carries two pictures, each read from 40 deg to one side of its spot.
    Azimuth = concept angle (0 front, counter-clockwise from above towards +X). HANUKKAH (right faces, centred at 63)
@@ -654,6 +665,7 @@ function resize() {
   renderer.setSize(w, h, false); composer.setSize(w, h); bloom.resolution.set(w, h);
   camera.aspect = w / h;
   camera.fov = w / h < 0.8 ? 44 : 32; camera.updateProjectionMatrix();
+  updateFraming();
 }
 addEventListener('resize', resize);
 const clock = new THREE.Clock();
@@ -664,7 +676,8 @@ function frame() {
 }
 
 async function start() {
-  resize(); setDark(true);
+  setDockOpen(readDockPref() ?? innerWidth > PHONE_DOCK_WIDTH);
+  resize(); setDark(false);
   try { await loadModel(); }
   catch (err) {
     console.error('Model load failed', err);
