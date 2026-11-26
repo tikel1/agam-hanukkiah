@@ -2,7 +2,7 @@
 
 Usage: python fill_form.py <unpacked form dir>
 The blank lines of the form are replaced in document.xml; the logo, Agam's photo and two views of
-the hanukkiah are added as inline pictures on a second page.
+the hanukkiah and the site's QR code are added as inline pictures on a second page.
 """
 
 from __future__ import annotations
@@ -73,11 +73,14 @@ def picture(rel_id: str, pic_id: int, path: Path, width_cm: float) -> str:
 
 
 PICTURES = [  # (file, media name, width cm)
-    (HERE / "logo.png", "logo.png", 14.5),
-    (HERE / "agam_fountain.jpg", "agam.jpg", 12.0),
-    (HERE / "shots" / "right_crop.jpg", "view_right.jpg", 6.0),
-    (HERE / "shots" / "left_crop.jpg", "view_left.jpg", 6.0),
+    (HERE / "logo.png", "logo.png", 10.5),
+    (HERE / "agam_fountain.jpg", "agam.jpg", 8.0),
+    (HERE / "shots" / "r_hero_right.jpg", "view_right.jpg", 5.8),
+    (HERE / "shots" / "r_hero_left.jpg", "view_left.jpg", 5.8),
+    (HERE.parent / "site" / "qr.png", "qr.png", 4.2),
 ]
+SITE_URL = "https://tikel1.github.io/agam-hanukkiah/"
+LINK_ID = "rIdSiteLink"
 
 
 def add_media(unpacked: Path) -> list[str]:
@@ -91,6 +94,9 @@ def add_media(unpacked: Path) -> list[str]:
             rels = rels.replace("</Relationships>", f'<Relationship Id="{rel_id}" Type="http://schemas.openxmlformats.org/'
                                 f'officeDocument/2006/relationships/image" Target="media/{name}"/></Relationships>')
         ids.append(rel_id)
+    if LINK_ID not in rels:
+        rels = rels.replace("</Relationships>", f'<Relationship Id="{LINK_ID}" Type="http://schemas.openxmlformats.org/'
+                            f'officeDocument/2006/relationships/hyperlink" Target="{SITE_URL}" TargetMode="External"/></Relationships>')
     rels_path.write_text(rels, encoding="utf-8")
     types_path = unpacked / "[Content_Types].xml"
     types = types_path.read_text(encoding="utf-8")
@@ -103,15 +109,17 @@ def add_media(unpacked: Path) -> list[str]:
 
 
 def picture_page(ids: list[str]) -> str:
-    (logo, agam, right, left) = [(rel, 100 + i, PICTURES[i][0], PICTURES[i][2]) for i, rel in enumerate(ids)]
+    (logo, agam, right, left, qr) = [(rel, 100 + i, PICTURES[i][0], PICTURES[i][2]) for i, rel in enumerate(ids)]
     page_break = '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
     caption = lambda text: paragraph(run(text, 22), after=240, center=True)  # noqa: E731
+    linked_qr = f'<w:hyperlink r:id="{LINK_ID}">{picture(*qr)}</w:hyperlink>'  # click the code in the PDF too
     return (page_break
-            + paragraph(picture(*logo), after=360, center=True)
-            + paragraph(picture(*agam), after=60, center=True)
-            + caption("יעקב אגם (1928 עד 2026) מול מזרקת \"אש ומים\" בכיכר דיזנגוף")
+            + paragraph(picture(*logo) + run("      ") + linked_qr, after=40, center=True)
+            + paragraph(run("הסרטון שלנו: ", 26, bold=True) + f'<w:hyperlink r:id="{LINK_ID}">{run("סרקו את הקוד או לחצו כאן", 26)}</w:hyperlink>', after=280, center=True)
             + paragraph(picture(*left) + run("   ") + picture(*right), after=60, center=True)
-            + caption("החנוכייה שלנו משני הצדדים: מצד שמאל רואים מגן דוד, ומצד ימין את המילה HANUKKAH"))
+            + caption("החנוכייה שלנו משני הצדדים: מצד שמאל רואים מגן דוד, ומצד ימין את המילה HANUKKAH")
+            + paragraph(picture(*agam), after=60, center=True)
+            + caption("יעקב אגם (1928 עד 2026) מול מזרקת \"אש ומים\" בכיכר דיזנגוף"))
 
 
 def fill(document: str, ids: list[str]) -> str:

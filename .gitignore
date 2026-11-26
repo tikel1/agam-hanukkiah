@@ -25,3 +25,6 @@ model/out/_plaque_preview/
 
 # Local tooling
 .claude/
+
+# Full-size viewer stills (rebuilt by viewer/render_stills.py)
+viewer/stills/
