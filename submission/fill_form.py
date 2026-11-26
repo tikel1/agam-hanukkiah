@@ -127,7 +127,10 @@ def fill(document: str, ids: list[str]) -> str:
     paragraphs = re.findall(r"<w:p [^>]*>.*?</w:p>", document, re.S)
     header = "".join(paragraphs[:3])  # school logo, spacer, title
     sect = document[document.index("<w:sectPr"):document.index("</w:body>")]
-    answers = (paragraph("", after=120)
+    watch_first = (paragraph(run("מומלץ לצפות קודם בסרטון הקצר שלנו (שתי דקות)", 26, bold=True), after=20, center=True)
+                   + paragraph(f'<w:hyperlink r:id="{LINK_ID}">{run("לחצו כאן לצפייה בסרטון", 26)}</w:hyperlink>'
+                               + run(", או סרקו את הקוד בעמוד הבא", 26), after=120, center=True))
+    answers = (paragraph("", after=60) + watch_first
                + field("שם: ", NAMES[0]) + field("משפחה: ", NAMES[1]) + field("כיתה: ", CLASSES)
                + field("שם החנוכייה: ", TITLE)
                + paragraph(run("החומרים ממנה עשויה:", 28, bold=True), after=60)

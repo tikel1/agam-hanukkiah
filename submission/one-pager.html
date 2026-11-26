@@ -15,7 +15,7 @@
 body { margin: 0; background: #fff; color: var(--navy); font-family: Assistant, "Segoe UI", Arial, sans-serif; }
 .page { width: 210mm; height: 296mm; padding: 8mm 12mm 6mm; position: relative; overflow: hidden; display: flex; flex-direction: column; }
 /* the fountain's ribbed drum: thin vertical stripes */
-.stripes { height: 5mm; margin: 0 -12mm 4mm; background: repeating-linear-gradient(90deg,
+.stripes { flex: none; height: 5mm; margin: 0 -12mm 4mm; background: repeating-linear-gradient(90deg,
   var(--red) 0 4mm, #fff 4mm 4.6mm, var(--yellow) 4.6mm 8.6mm, #fff 8.6mm 9.2mm, var(--teal) 9.2mm 13.2mm, #fff 13.2mm 13.8mm,
   var(--purple) 13.8mm 17.8mm, #fff 17.8mm 18.4mm, var(--sky) 18.4mm 22.4mm, #fff 22.4mm 23mm, var(--green) 23mm 27mm, #fff 27mm 27.6mm,
   var(--orange) 27.6mm 31.6mm, #fff 31.6mm 32.2mm, var(--blue) 32.2mm 36.2mm, #fff 36.2mm 36.8mm, var(--lilac) 36.8mm 40.8mm, #fff 40.8mm 41.4mm,
@@ -38,23 +38,23 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
 .qr-card .call { width: 22mm; font-size: 10pt; line-height: 1.3; font-weight: 600; }
 .qr-card .call b { display: block; font-size: 15pt; font-weight: 800; line-height: 1.1; margin-bottom: 1.5mm; color: var(--red); }
 
-/* the hanukkiah from both sides */
-.hero { display: flex; gap: 4mm; align-items: stretch; margin-bottom: 3mm; }
-.hero .shot { flex: 1; background: var(--studio); border-radius: 2.5mm; overflow: hidden; position: relative; }
-.hero .shot img { display: block; width: 100%; height: 76mm; object-fit: cover; object-position: center 30%; }
-.hero .shot span { position: absolute; bottom: 2mm; right: 2mm; background: #fff; border-radius: 1.5mm; padding: 0.6mm 2mm; font-size: 9.5pt; font-weight: 700; }
-.hero .shot span b { color: var(--c); }
-.hero .text { width: 52mm; flex: none; display: flex; flex-direction: column; justify-content: center; }
+/* the hanukkiah: one picture, the two sides told in words */
+.hero { display: flex; gap: 6mm; align-items: stretch; margin-bottom: 4mm; }
+.hero .shot { width: 68mm; height: 76mm; flex: none; background: var(--studio); border-radius: 2.5mm; overflow: hidden; }
+.hero .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.hero .text { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.chips { display: flex; gap: 3mm; margin-top: 2mm; }
+.chips span { flex: 1; border-top: 1mm solid var(--c); padding-top: 1mm; font-size: 9pt; line-height: 1.25; }
+.chips b { display: block; font-size: 16pt; font-weight: 800; color: var(--c); }
 
-/* making it, step by step */
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin: 1mm 0 3mm; }
-.step { border-top: 1.2mm solid var(--c); padding-top: 1.5mm; }
-.step .pic { height: 30mm; background: var(--studio); border-radius: 2mm; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5mm; }
-.step .pic img { display: block; height: 100%; width: 100%; object-fit: contain; }
-.step .pic.fill img { object-fit: cover; }
-.step h3 { margin: 0 0 0.5mm; font-size: 11pt; font-weight: 800; color: var(--navy); display: flex; gap: 1.5mm; align-items: baseline; }
-.step h3 i { font-style: normal; color: var(--c); font-size: 13pt; }
-.step p { font-size: 9.4pt; line-height: 1.38; margin: 0; }
+/* making it: three steps with icons in the film's look */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; margin: 1mm 0 3mm; }
+.step { border-top: 1.2mm solid var(--c); padding-top: 2mm; }
+.step .icon { height: 24mm; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5mm; }
+.step .icon svg { height: 100%; width: auto; }
+.step h3 { margin: 0 0 0.8mm; font-size: 12pt; font-weight: 800; color: var(--navy); display: flex; gap: 1.5mm; align-items: baseline; }
+.step h3 i { font-style: normal; color: var(--c); font-size: 14pt; }
+.step p { font-size: 9.8pt; line-height: 1.4; margin: 0; }
 
 /* Agam and the fountain */
 .about { display: flex; gap: 5mm; margin-bottom: 2mm; }
@@ -80,34 +80,44 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
   <div class="hero">
     <div class="text">
       <h2 style="--dot: var(--purple)">חנוכייה עם שתי תמונות</h2>
-      <p>כמו בציורים של יעקב אגם, החנוכייה שלנו משתנה כשהולכים סביבה. <b>משמאל רואים מגן דוד וסביבון, ומימין את המילה HANUKKAH וסופגנייה</b>.</p>
-      <p>חמש טבעות משוננות, כמו במזרקה, ו־<b>408 פאות</b> שכל אחת מהן נצבעה ביד.</p>
+      <p>כמו בציורים של יעקב אגם, החנוכייה שלנו <b>משתנה כשהולכים סביבה</b>. לכל שן בטבעות יש שתי פאות בשני צבעים: פאה אחת פונה שמאלה ופאה אחת פונה ימינה.</p>
+      <p>מי שעומד <b>משמאל</b> רואה <b>מגן דוד וסביבון</b>. מי שעומד <b>מימין</b> רואה את המילה <b>HANUKKAH וסופגנייה</b>. בתמונה כאן אנחנו עומדים מימין, והאותיות של HANUKKAH מופיעות על הטבעת הגדולה.</p>
+      <div class="chips">
+        <span style="--c: var(--red)"><b>5</b>טבעות משוננות</span>
+        <span style="--c: var(--teal)"><b>408</b>פאות צבועות ביד</span>
+        <span style="--c: var(--orange)"><b>8</b>נרות ושמש</span>
+      </div>
     </div>
-    <figure class="shot"><img src="shots/r_hero_left.jpg" alt="החנוכייה מצד שמאל"><span style="--c: var(--green)"><b>משמאל:</b> מגן דוד</span></figure>
-    <figure class="shot"><img src="shots/r_hero_right.jpg" alt="החנוכייה מצד ימין"><span style="--c: var(--blue)"><b>מימין:</b> HANUKKAH</span></figure>
+    <figure class="shot"><img src="shots/r_hero_right.jpg" alt="החנוכייה מצד ימין, עם המילה HANUKKAH"></figure>
   </div>
 
   <h2 style="--dot: var(--yellow)">איך הכנו את החנוכייה</h2>
   <div class="steps">
     <div class="step" style="--c: var(--red)">
-      <div class="pic"><img src="shots/r_exploded.jpg" alt="המודל התלת־ממדי מפורק לחלקים"></div>
-      <h3><i>1</i>עיצוב</h3>
-      <p>תיארנו את המזרקה, ויחד עם <b>בינה מלאכותית</b> בנינו מודל תלת־ממדי: הטבעות, מקומות לשמונה נרות ולשמש, ותוכנית צבעים לכל פאה.</p>
+      <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="62" cy="82" rx="40" ry="5" fill="#0e1233" opacity=".12"/>
+<rect x="32" y="66" width="8" height="14" fill="#b95f42"/><rect x="46" y="66" width="8" height="14" fill="#b95f42"/><rect x="66" y="66" width="8" height="14" fill="#b95f42"/><rect x="80" y="66" width="8" height="14" fill="#b95f42"/>
+<rect x="12" y="40" width="14" height="11" fill="#d97757"/><rect x="94" y="22" width="14" height="11" fill="#d97757" transform="rotate(-35 101 27)"/>
+<rect x="24" y="22" width="72" height="46" fill="#d97757"/><rect x="24" y="60" width="72" height="8" fill="#b95f42"/>
+<rect x="43" y="30" width="7" height="16" fill="#1f1e1d"/><rect x="70" y="30" width="7" height="16" fill="#1f1e1d"/></svg></div>
+      <h3><i>1</i>עיצוב עם Claude</h3>
+      <p>תיארנו את המזרקה, ויחד עם <b>בינה מלאכותית</b> בנינו מודל תלת־ממדי: חמש טבעות, מקומות לשמונה נרות ולשמש, ותוכנית צבעים לכל אחת מ־408 הפאות.</p>
     </div>
     <div class="step" style="--c: var(--teal)">
-      <div class="pic"><img src="shots/r_white_print.jpg" alt="החנוכייה המודפסת לפני הצביעה"></div>
+      <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="84" rx="46" ry="4" fill="#0e1233" opacity=".12"/>
+<rect x="14" y="70" width="92" height="12" rx="2" fill="#e7e5df"/><rect x="84" y="74" width="14" height="4" rx="1" fill="#232c5e"/>
+<rect x="22" y="16" width="7" height="56" fill="#232c5e"/><rect x="91" y="16" width="7" height="56" fill="#232c5e"/><rect x="22" y="16" width="76" height="7" fill="#232c5e"/>
+<rect x="30" y="64" width="60" height="5" fill="#3a447a"/>
+<rect x="46" y="44" width="28" height="20" fill="#fbfaf6"/><rect x="46" y="44" width="28" height="4" fill="#edebe4"/>
+<rect x="49" y="48" width="3" height="16" fill="#e4432f"/><rect x="55" y="48" width="3" height="16" fill="#f6d21c"/><rect x="61" y="48" width="3" height="16" fill="#1fa3a8"/><rect x="67" y="48" width="3" height="16" fill="#6a5ea8"/>
+<rect x="29" y="30" width="62" height="4" fill="#9aa0b8"/><rect x="52" y="27" width="16" height="13" rx="1.5" fill="#edebe4" stroke="#232c5e" stroke-width="1.5"/><path d="M57 40h6l-3 4z" fill="#232c5e"/>
+<path d="M60 27 C60 18 58 12 60 9" stroke="#9aa0b8" stroke-width="1.6" fill="none"/><circle cx="60" cy="8" r="7" fill="#fbfaf6" stroke="#232c5e" stroke-width="1.5"/><circle cx="60" cy="8" r="2.2" fill="#232c5e"/></svg></div>
       <h3><i>2</i>הדפסה</h3>
       <p>כל החלקים הודפסו <b>בהדפסה תלת־ממדית מפלסטיק ממוחזר</b>, בדיוק בכמות שצריך ובלי פסולת חיתוך.</p>
     </div>
     <div class="step" style="--c: var(--orange)">
-      <div class="pic fill"><img src="shots/r_paint_closeup.jpg" alt="הטבעות הצבועות מקרוב"></div>
+      <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="82" rx="42" ry="4" fill="#0e1233" opacity=".12"/><g transform="rotate(-28 60 50)"><rect x="22" y="30" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="31" width="14" height="9" rx="2" fill="#e4432f"/><path d="M22 32 l-9 3.5 l9 3.5z" fill="#e4432f"/><rect x="40" y="33" width="20" height="5" fill="#e4432f"/><rect x="22" y="44" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="45" width="14" height="9" rx="2" fill="#f6d21c"/><path d="M22 46 l-9 3.5 l9 3.5z" fill="#f6d21c"/><rect x="40" y="47" width="20" height="5" fill="#f6d21c"/><rect x="22" y="58" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="59" width="14" height="9" rx="2" fill="#1fa3a8"/><path d="M22 60 l-9 3.5 l9 3.5z" fill="#1fa3a8"/><rect x="40" y="61" width="20" height="5" fill="#1fa3a8"/></g></svg></div>
       <h3><i>3</i>צביעה</h3>
       <p>נעמי וליבי <b>צבעו ביד כל פאה</b>, טבעת אחרי טבעת, לפי חוברת צביעה שהכנו, בטושי Posca ובצבע אקריליק.</p>
-    </div>
-    <div class="step" style="--c: var(--purple)">
-      <div class="pic fill"><img src="shots/r_night.jpg" alt="החנוכייה בלילה עם נרות דולקים"></div>
-      <h3><i>4</i>הדלקה</h3>
-      <p>כשמדליקים את הנרות, <b>האש עולה מעל הטבעות הצבעוניות</b>, כמו האש שפורצת מתוך המים במזרקה.</p>
     </div>
   </div>
 
