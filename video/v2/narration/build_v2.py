@@ -20,7 +20,7 @@ NOTES = {"1.1": "bright friendly cheerful greeting", "1.2": "excited, proud intr
          "8.1": "upbeat", "9.1": "excited, fun", "9.2": "proud, rhythmic", "9.3": "satisfied, warm", "10.1": "warm, moved, emotional",
          "10.2": "warm, sincere, a soft smile, natural, not dramatic", "10.3": "warm, hopeful, smiling, light", "10.4": "warm, glad, big smile"}
 REDO = {}
-RETAKE = {"3.3": "_m", "10.2": "_m", "10.3": "_m"}   # 2026-11-27: lighter ending, calmer fountain line
+RETAKE = {"2.5": "_m", "3.3": "_m", "10.2": "_m", "10.3": "_m"}   # 2026-11-27: lighter ending, calmer fountain line
 TONE_FIX = {"3.3", "4.3", "7.2"}
 PRON_FIX = ("נעמי", "גדולה", "חנוכי", "AI", "צבענו ביד")      # words the narrator mispronounced
 
