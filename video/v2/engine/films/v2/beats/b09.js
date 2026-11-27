@@ -13,6 +13,7 @@ import { Hanukkiah } from '../../../src/components/hanukkiah.js';
 import { ease, prog } from '../../../src/core/motion.js';
 import { LINK, TABLE_RIG, mixRig, linkRig, linkRingCentre, R3_HALF } from '../parts/b08_link.js';
 import { buildTable, updateTable, TABLE } from '../parts/b09_table.js';
+import { buildCollage, updateCollage, hideCollage } from '../parts/b09_collage.js';
 import { PAINT, PRESPIN, LEFTOVER, paintState } from '../parts/b09_paint.js';
 import { buildTitles, updateTitles } from '../parts/b09_titles.js';
 import { STACK, stackState, ringSideX } from '../parts/b09_stack.js';
@@ -107,6 +108,7 @@ export async function create(ctx) {
   const arrival = new ArrivalShadow();
   scene.add(hanukkiah.group, arrival.mesh);
   const table = await buildTable(scene);
+  const collage = await buildCollage(scene);
   const titles = await buildTitles(scene);
   if (TABLE_RIG.zoom <= 0) throw new Error('b09: table rig zoom must be positive');
 
@@ -115,13 +117,14 @@ export async function create(ctx) {
     updateHanukkiah(hanukkiah, shadows, t, T112);
     arrival.update(linkRingCentre(t), t < LANDED);
     const atRest = t >= STACK.rest;
-    table.photo.group.visible = false;
+    hideCollage(collage);
     table.markers.forEach((marker) => { marker.group.visible = false; });
     titles.number.group.visible = false;
     titles.word.group.visible = false;
     titles.line.visible = false;
     titles.counter.group.visible = false;
     if (atRest) return;
+    updateCollage(collage, t, stage);
     updateTable(table, t, stage, project(stage, paintState(t).tip));
     updateTitles(titles, t, stage);
   }
