@@ -13,19 +13,22 @@ PACE = "talking fast, brisk and energetic, like an excited kid telling a story"
 SLOW = "gentle, slower pace"
 NOTES = {"1.1": "bright friendly cheerful greeting", "1.2": "excited, proud introduction, clear", "2.1": "enthusiastic", "2.2": "clear, light",
          "2.3": "playful, clear, one smooth take", "2.4": "curious, amazed", "2.5": "delighted", "3.1": "warm, proud", "3.2": "amazed, building",
-         "3.3": "plain, natural, matter of fact", "3.4": "dramatic, bold", "4.1": "excited, glowing", "4.2": "impressed, wide-eyed",
+         "3.3": "light, cheerful storytelling, same easy tone as the rest, not dramatic", "3.4": "dramatic, bold", "4.1": "excited, glowing", "4.2": "impressed, wide-eyed",
          "4.3": "calm, sincere, natural, a little softer", "4.4": "bright, inspired, energy returns", "5.1": "relaxed, focused", "5.2": "curious",
          "6.1": "excited, announcing", "6.2": "energetic", "6.3": "energetic, impressed", "6.4": "playful, a wink, a little giggle",
          "7.1": "proud, warm", "7.2": "natural, light, matter of fact", "7.3": "excited reveal, delighted", "7.4": "joyful, triumphant",
          "8.1": "upbeat", "9.1": "excited, fun", "9.2": "proud, rhythmic", "9.3": "satisfied, warm", "10.1": "warm, moved, emotional",
-         "10.2": "!heartfelt, sincere", "10.3": "!tender, hopeful", "10.4": "warm, glad, big smile"}
+         "10.2": "warm, sincere, a soft smile, natural, not dramatic", "10.3": "warm, hopeful, smiling, light", "10.4": "warm, glad, big smile"}
 REDO = {}
+RETAKE = {"3.3": "_m", "10.2": "_m", "10.3": "_m"}   # 2026-11-27: lighter ending, calmer fountain line
 TONE_FIX = {"3.3", "4.3", "7.2"}
 PRON_FIX = ("נעמי", "גדולה", "חנוכי", "AI", "צבענו ביד")      # words the narrator mispronounced
 
 
 def ver(rid, text):
     """Only rows with a reported problem get a new take ("_c"); every other row keeps the take that already worked."""
+    if rid in RETAKE:
+        return RETAKE[rid]
     plain = NIQQUD.sub("", text)
     if "נעמי" in plain:
         return "_h"
