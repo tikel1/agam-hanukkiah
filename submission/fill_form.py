@@ -1,7 +1,7 @@
 """Fills the school's participation form (docx) for the Agam hanukkiah and appends a picture page.
 
 Usage: python fill_form.py <unpacked form dir>
-The blank lines of the form are replaced in document.xml; the logo, Agam's photo and two views of
+The blank lines of the form are replaced in document.xml; the logo, Agam's photo, a photo of
 the hanukkiah and the site's QR code are added as inline pictures on a second page.
 """
 
@@ -28,9 +28,9 @@ PROCESS = [
     ("הרעיון: ", "רצינו לעשות מחווה לאמן יעקב אגם, שהלך לעולמו השנה (יוני 2026), ובחרנו ביצירה המוכרת שלו: "
      "מזרקת \"אש ומים\" בכיכר דיזנגוף, עם הטבעות הצבעוניות המסתובבות והאש שפורצת מתוך המים."),
     ("העיצוב: ", "תהליך העיצוב נוצר באמצעות בינה מלאכותית. תיארנו את המזרקה, ויחד עם הבינה המלאכותית בנינו "
-     "מודל תלת־ממדי של חמש טבעות משוננות, כמו במזרקה, עם מקומות לשמונה נרות ולשמש, ותוכנית צבעים לכל אחת "
-     "מ־408 הפאות. כמו בעבודות של אגם, החנוכייה מראה שתי תמונות: משמאל מגן דוד וסביבון, ומימין המילה "
-     "HANUKKAH וסופגנייה."),
+     "מודל תלת־ממדי של חמש טבעות משוננות, כמו במזרקה, ותוכנית צבעים לכל אחת מ־408 הפאות. כמו בציורים של "
+     "אגם, החנוכייה משתנה כשהולכים סביבה, ובתוך הפסים מסתתרים סמלים של חג החנוכה: סביבון, סופגנייה, "
+     "מגן דוד ועוד."),
     ("הייצור: ", "כל החלקים הודפסו בהדפסה תלת־ממדית מפלסטיק ממוחזר."),
     ("הצביעה: ", "נעמי וליבי צבעו ביד כל פאה, טבעת אחרי טבעת, לפי חוברת צביעה שהכנו."),
     ("הקשר לקיימות: ", "החנוכייה עשויה מפלסטיק ממוחזר. בהדפסה תלת־ממדית משתמשים רק בחומר שצריך, בלי פסולת "
@@ -74,9 +74,8 @@ def picture(rel_id: str, pic_id: int, path: Path, width_cm: float) -> str:
 
 PICTURES = [  # (file, media name, width cm)
     (HERE / "logo.png", "logo.png", 10.5),
-    (HERE / "agam_fountain.jpg", "agam.jpg", 8.0),
-    (HERE / "shots" / "r_hero_right.jpg", "view_right.jpg", 5.8),
-    (HERE / "shots" / "r_hero_left.jpg", "view_left.jpg", 5.8),
+    (HERE / "agam_fountain.jpg", "agam.jpg", 7.2),
+    (HERE / "photos" / "hanukkiah.jpg", "hanukkiah.jpg", 5.3),
     (HERE.parent / "site" / "qr.png", "qr.png", 4.2),
 ]
 SITE_URL = "https://tikel1.github.io/agam-hanukkiah/"
@@ -109,15 +108,15 @@ def add_media(unpacked: Path) -> list[str]:
 
 
 def picture_page(ids: list[str]) -> str:
-    (logo, agam, right, left, qr) = [(rel, 100 + i, PICTURES[i][0], PICTURES[i][2]) for i, rel in enumerate(ids)]
+    (logo, agam, hanukkiah, qr) = [(rel, 100 + i, PICTURES[i][0], PICTURES[i][2]) for i, rel in enumerate(ids)]
     page_break = '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
     caption = lambda text: paragraph(run(text, 22), after=240, center=True)  # noqa: E731
     linked_qr = f'<w:hyperlink r:id="{LINK_ID}">{picture(*qr)}</w:hyperlink>'  # click the code in the PDF too
     return (page_break
             + paragraph(picture(*logo) + run("      ") + linked_qr, after=40, center=True)
-            + paragraph(run("הסרטון שלנו: ", 26, bold=True) + f'<w:hyperlink r:id="{LINK_ID}">{run("סרקו את הקוד או לחצו כאן", 26)}</w:hyperlink>', after=280, center=True)
-            + paragraph(picture(*left) + run("   ") + picture(*right), after=60, center=True)
-            + caption("החנוכייה שלנו משני הצדדים: מצד שמאל רואים מגן דוד, ומצד ימין את המילה HANUKKAH")
+            + paragraph(run("מומלץ! סרטון הסבר: ", 26, bold=True) + f'<w:hyperlink r:id="{LINK_ID}">{run("סרקו את הברקוד", 26)}</w:hyperlink>', after=280, center=True)
+            + paragraph(picture(*hanukkiah), after=60, center=True)
+            + caption("החנוכייה שלנו, עם דפי הצביעה")
             + paragraph(picture(*agam), after=60, center=True)
             + caption("יעקב אגם (1928 עד 2026) מול מזרקת \"אש ומים\" בכיכר דיזנגוף"))
 
@@ -127,9 +126,8 @@ def fill(document: str, ids: list[str]) -> str:
     paragraphs = re.findall(r"<w:p [^>]*>.*?</w:p>", document, re.S)
     header = "".join(paragraphs[:3])  # school logo, spacer, title
     sect = document[document.index("<w:sectPr"):document.index("</w:body>")]
-    watch_first = (paragraph(run("מומלץ לצפות קודם בסרטון הקצר שלנו (שתי דקות)", 26, bold=True), after=20, center=True)
-                   + paragraph(f'<w:hyperlink r:id="{LINK_ID}">{run("לחצו כאן לצפייה בסרטון", 26)}</w:hyperlink>'
-                               + run(", או סרקו את הקוד בעמוד הבא", 26), after=120, center=True))
+    watch_first = (paragraph(run("מומלץ לצפות קודם בסרטון ההסבר שלנו (שתי דקות)", 26, bold=True), after=20, center=True)
+                   + paragraph(f'<w:hyperlink r:id="{LINK_ID}">{run("סרקו את הברקוד בעמוד הבא", 26)}</w:hyperlink>', after=120, center=True))
     answers = (paragraph("", after=60) + watch_first
                + field("שם: ", NAMES[0]) + field("משפחה: ", NAMES[1]) + field("כיתה: ", CLASSES)
                + field("שם החנוכייה: ", TITLE)
