@@ -40,8 +40,10 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
 
 /* the hanukkiah: one picture, the two sides told in words */
 .hero { display: flex; gap: 6mm; align-items: stretch; margin-bottom: 4mm; }
-.hero .shot { width: 68mm; height: 76mm; flex: none; background: var(--studio); border-radius: 2.5mm; overflow: hidden; }
-.hero .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.top { display: flex; gap: 6mm; align-items: stretch; }
+.top .main { flex: 1; min-width: 0; }
+.top .shot { width: 50mm; flex: none; border-radius: 2.5mm; overflow: hidden; margin-bottom: 3mm; flex: none; background: var(--studio); border-radius: 2.5mm; overflow: hidden; }
+.top .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 55%; }
 .hero .text { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .chips { display: flex; gap: 3mm; margin-top: 2mm; }
 .chips span { flex: 1; border-top: 1mm solid var(--c); padding-top: 1mm; font-size: 9pt; line-height: 1.25; }
@@ -50,7 +52,7 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
 /* making it: three steps with icons in the film's look */
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; margin: 1mm 0 3mm; }
 .step { border-top: 1.2mm solid var(--c); padding-top: 2mm; }
-.step .icon { height: 24mm; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5mm; }
+.step .icon { height: 18mm; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5mm; }
 .step .icon svg { height: 100%; width: auto; }
 .step h3 { margin: 0 0 0.8mm; font-size: 12pt; font-weight: 800; color: var(--navy); display: flex; gap: 1.5mm; align-items: baseline; }
 .step h3 i { font-style: normal; color: var(--c); font-size: 14pt; }
@@ -81,47 +83,47 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
   </div>
   <div class="stripes"></div>
 
-  <div class="hero">
-    <div class="text">
-      <h2 style="--dot: var(--purple)">חנוכייה שהיא יצירת אמנות</h2>
-      <p>כמו בציורים של יעקב אגם, החנוכייה שלנו <b>משתנה כשהולכים סביבה</b>. לכל שן בטבעות יש שתי פאות בשני צבעים, וכל צד מגלה ציור אחר.</p>
-      <p>בתוך הפסים מסתתרים <b>סמלים של חג החנוכה</b>: סביבון, סופגנייה, מגן דוד ועוד.</p>
-      <div class="chips">
-        <span style="--c: var(--red)"><b>5</b>טבעות משוננות</span>
-        <span style="--c: var(--teal)"><b>408</b>פאות צבועות ביד</span>
-        <span style="--c: var(--orange)"><b>4</b>סמלי חנוכה</span>
+  <div class="top">
+    <div class="main">
+    <div class="hero">
+      <div class="text">
+        <h2 style="--dot: var(--purple)">חנוכייה שהיא יצירת אמנות</h2>
+        <p>כמו בציורים של יעקב אגם, החנוכייה שלנו <b>משתנה כשהולכים סביבה</b>. לכל שן בטבעות יש שתי פאות בשני צבעים, וכל צד מגלה ציור אחר.</p>
+        <p>בתוך הפסים מסתתרים <b>סמלים של חג החנוכה</b>: סביבון, סופגנייה, מגן דוד ועוד.</p>
       </div>
     </div>
-  </div>
-
-  <h2 style="--dot: var(--yellow)">איך הכנו את החנוכייה</h2>
-  <div class="steps">
-    <div class="step" style="--c: var(--red)">
-      <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="62" cy="82" rx="40" ry="5" fill="#0e1233" opacity=".12"/>
-<rect x="32" y="66" width="8" height="14" fill="#b95f42"/><rect x="46" y="66" width="8" height="14" fill="#b95f42"/><rect x="66" y="66" width="8" height="14" fill="#b95f42"/><rect x="80" y="66" width="8" height="14" fill="#b95f42"/>
-<rect x="12" y="40" width="14" height="11" fill="#d97757"/><rect x="94" y="22" width="14" height="11" fill="#d97757" transform="rotate(-35 101 27)"/>
-<rect x="24" y="22" width="72" height="46" fill="#d97757"/><rect x="24" y="60" width="72" height="8" fill="#b95f42"/>
-<rect x="43" y="30" width="7" height="16" fill="#1f1e1d"/><rect x="70" y="30" width="7" height="16" fill="#1f1e1d"/></svg></div>
-      <h3><i>1</i>עיצוב עם Claude</h3>
-      <p>תיארנו את המזרקה, ויחד עם <b>בינה מלאכותית</b> בנינו מודל תלת־ממדי: חמש טבעות, מקומות לשמונה נרות ולשמש, ותוכנית צבעים לכל אחת מ־408 הפאות.</p>
+  
+    <h2 style="--dot: var(--yellow)">איך הכנו את החנוכייה</h2>
+    <div class="steps">
+      <div class="step" style="--c: var(--red)">
+        <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="62" cy="82" rx="40" ry="5" fill="#0e1233" opacity=".12"/>
+  <rect x="32" y="66" width="8" height="14" fill="#b95f42"/><rect x="46" y="66" width="8" height="14" fill="#b95f42"/><rect x="66" y="66" width="8" height="14" fill="#b95f42"/><rect x="80" y="66" width="8" height="14" fill="#b95f42"/>
+  <rect x="12" y="40" width="14" height="11" fill="#d97757"/><rect x="94" y="22" width="14" height="11" fill="#d97757" transform="rotate(-35 101 27)"/>
+  <rect x="24" y="22" width="72" height="46" fill="#d97757"/><rect x="24" y="60" width="72" height="8" fill="#b95f42"/>
+  <rect x="43" y="30" width="7" height="16" fill="#1f1e1d"/><rect x="70" y="30" width="7" height="16" fill="#1f1e1d"/></svg></div>
+        <h3><i>1</i>עיצוב עם Claude</h3>
+        <p>תיארנו את המזרקה, ויחד עם <b>בינה מלאכותית</b> בנינו מודל תלת־ממדי: חמש טבעות, מקומות לשמונה נרות ולשמש, ותוכנית צבעים לכל אחת מ־408 הפאות.</p>
+      </div>
+      <div class="step" style="--c: var(--teal)">
+        <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="84" rx="46" ry="4" fill="#0e1233" opacity=".12"/>
+  <rect x="14" y="70" width="92" height="12" rx="2" fill="#e7e5df"/><rect x="84" y="74" width="14" height="4" rx="1" fill="#232c5e"/>
+  <rect x="22" y="16" width="7" height="56" fill="#232c5e"/><rect x="91" y="16" width="7" height="56" fill="#232c5e"/><rect x="22" y="16" width="76" height="7" fill="#232c5e"/>
+  <rect x="30" y="64" width="60" height="5" fill="#3a447a"/>
+  <rect x="46" y="44" width="28" height="20" fill="#fbfaf6"/><rect x="46" y="44" width="28" height="4" fill="#edebe4"/>
+  <rect x="49" y="48" width="3" height="16" fill="#e4432f"/><rect x="55" y="48" width="3" height="16" fill="#f6d21c"/><rect x="61" y="48" width="3" height="16" fill="#1fa3a8"/><rect x="67" y="48" width="3" height="16" fill="#6a5ea8"/>
+  <rect x="29" y="30" width="62" height="4" fill="#9aa0b8"/><rect x="52" y="27" width="16" height="13" rx="1.5" fill="#edebe4" stroke="#232c5e" stroke-width="1.5"/><path d="M57 40h6l-3 4z" fill="#232c5e"/>
+  <path d="M60 27 C60 18 58 12 60 9" stroke="#9aa0b8" stroke-width="1.6" fill="none"/><circle cx="60" cy="8" r="7" fill="#fbfaf6" stroke="#232c5e" stroke-width="1.5"/><circle cx="60" cy="8" r="2.2" fill="#232c5e"/></svg></div>
+        <h3><i>2</i>הדפסה</h3>
+        <p>כל החלקים הודפסו <b>בהדפסה תלת־ממדית מפלסטיק ממוחזר</b>, בדיוק בכמות שצריך ובלי פסולת חיתוך.</p>
+      </div>
+      <div class="step" style="--c: var(--orange)">
+        <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="82" rx="42" ry="4" fill="#0e1233" opacity=".12"/><g transform="rotate(-28 60 50)"><rect x="22" y="30" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="31" width="14" height="9" rx="2" fill="#e4432f"/><path d="M22 32 l-9 3.5 l9 3.5z" fill="#e4432f"/><rect x="40" y="33" width="20" height="5" fill="#e4432f"/><rect x="22" y="44" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="45" width="14" height="9" rx="2" fill="#f6d21c"/><path d="M22 46 l-9 3.5 l9 3.5z" fill="#f6d21c"/><rect x="40" y="47" width="20" height="5" fill="#f6d21c"/><rect x="22" y="58" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="59" width="14" height="9" rx="2" fill="#1fa3a8"/><path d="M22 60 l-9 3.5 l9 3.5z" fill="#1fa3a8"/><rect x="40" y="61" width="20" height="5" fill="#1fa3a8"/></g></svg></div>
+        <h3><i>3</i>צביעה</h3>
+        <p>נעמי וליבי <b>צבעו ביד כל פאה</b>, טבעת אחרי טבעת, לפי חוברת צביעה שהכנו, בצבעי אקריליק.</p>
+      </div>
     </div>
-    <div class="step" style="--c: var(--teal)">
-      <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="84" rx="46" ry="4" fill="#0e1233" opacity=".12"/>
-<rect x="14" y="70" width="92" height="12" rx="2" fill="#e7e5df"/><rect x="84" y="74" width="14" height="4" rx="1" fill="#232c5e"/>
-<rect x="22" y="16" width="7" height="56" fill="#232c5e"/><rect x="91" y="16" width="7" height="56" fill="#232c5e"/><rect x="22" y="16" width="76" height="7" fill="#232c5e"/>
-<rect x="30" y="64" width="60" height="5" fill="#3a447a"/>
-<rect x="46" y="44" width="28" height="20" fill="#fbfaf6"/><rect x="46" y="44" width="28" height="4" fill="#edebe4"/>
-<rect x="49" y="48" width="3" height="16" fill="#e4432f"/><rect x="55" y="48" width="3" height="16" fill="#f6d21c"/><rect x="61" y="48" width="3" height="16" fill="#1fa3a8"/><rect x="67" y="48" width="3" height="16" fill="#6a5ea8"/>
-<rect x="29" y="30" width="62" height="4" fill="#9aa0b8"/><rect x="52" y="27" width="16" height="13" rx="1.5" fill="#edebe4" stroke="#232c5e" stroke-width="1.5"/><path d="M57 40h6l-3 4z" fill="#232c5e"/>
-<path d="M60 27 C60 18 58 12 60 9" stroke="#9aa0b8" stroke-width="1.6" fill="none"/><circle cx="60" cy="8" r="7" fill="#fbfaf6" stroke="#232c5e" stroke-width="1.5"/><circle cx="60" cy="8" r="2.2" fill="#232c5e"/></svg></div>
-      <h3><i>2</i>הדפסה</h3>
-      <p>כל החלקים הודפסו <b>בהדפסה תלת־ממדית מפלסטיק ממוחזר</b>, בדיוק בכמות שצריך ובלי פסולת חיתוך.</p>
     </div>
-    <div class="step" style="--c: var(--orange)">
-      <div class="icon"><svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="82" rx="42" ry="4" fill="#0e1233" opacity=".12"/><g transform="rotate(-28 60 50)"><rect x="22" y="30" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="31" width="14" height="9" rx="2" fill="#e4432f"/><path d="M22 32 l-9 3.5 l9 3.5z" fill="#e4432f"/><rect x="40" y="33" width="20" height="5" fill="#e4432f"/><rect x="22" y="44" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="45" width="14" height="9" rx="2" fill="#f6d21c"/><path d="M22 46 l-9 3.5 l9 3.5z" fill="#f6d21c"/><rect x="40" y="47" width="20" height="5" fill="#f6d21c"/><rect x="22" y="58" width="62" height="11" rx="2" fill="#2a2d3e"/><rect x="84" y="59" width="14" height="9" rx="2" fill="#1fa3a8"/><path d="M22 60 l-9 3.5 l9 3.5z" fill="#1fa3a8"/><rect x="40" y="61" width="20" height="5" fill="#1fa3a8"/></g></svg></div>
-      <h3><i>3</i>צביעה</h3>
-      <p>נעמי וליבי <b>צבעו ביד כל פאה</b>, טבעת אחרי טבעת, לפי חוברת צביעה שהכנו, בצבעי אקריליק.</p>
-    </div>
+    <div class="shot"><img src="photos/hanukkiah.jpg" alt="חנוכיית אש ומים על שולחן, עם דפי הצביעה והטושים"></div>
   </div>
 
   <div class="about">
