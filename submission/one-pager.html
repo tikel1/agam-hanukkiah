@@ -60,6 +60,10 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
 .about { display: flex; gap: 5mm; margin-bottom: 2mm; }
 .about .text { flex: 1; }
 .about .agam img { width: 50mm; height: 38mm; object-fit: cover; object-position: 70% 30%; border-radius: 2mm; display: block; }
+/* the girls along the way: four photos in a row */
+.album { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 1mm; }
+.album img { display: block; width: 100%; height: 31mm; object-fit: cover; border-radius: 2mm; }
+.album figcaption { margin-top: 0.8mm; }
 .dots { display: flex; justify-content: space-between; margin-top: auto; padding-top: 2.5mm; }
 .dots span { width: 2.6mm; height: 2.6mm; border-radius: 50%; background: var(--c); }
 .sign { text-align: center; font-size: 12pt; font-weight: 700; margin-top: 2mm; }
@@ -81,14 +85,13 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
     <div class="text">
       <h2 style="--dot: var(--purple)">חנוכייה עם שתי תמונות</h2>
       <p>כמו בציורים של יעקב אגם, החנוכייה שלנו <b>משתנה כשהולכים סביבה</b>. לכל שן בטבעות יש שתי פאות בשני צבעים: פאה אחת פונה שמאלה ופאה אחת פונה ימינה.</p>
-      <p>מי שעומד <b>משמאל</b> רואה <b>מגן דוד וסביבון</b>. מי שעומד <b>מימין</b> רואה את המילה <b>HANUKKAH וסופגנייה</b>. בתמונה כאן אנחנו עומדים מימין, והאותיות של HANUKKAH מופיעות על הטבעת הגדולה.</p>
+      <p>מי שעומד <b>משמאל</b> רואה <b>מגן דוד וסביבון</b>. מי שעומד <b>מימין</b> רואה את המילה <b>HANUKKAH וסופגנייה</b>.</p>
       <div class="chips">
         <span style="--c: var(--red)"><b>5</b>טבעות משוננות</span>
         <span style="--c: var(--teal)"><b>408</b>פאות צבועות ביד</span>
         <span style="--c: var(--orange)"><b>4</b>סמלי חנוכה</span>
       </div>
     </div>
-    <figure class="shot"><img src="shots/r_hero_right.jpg" alt="החנוכייה מצד ימין, עם המילה HANUKKAH"></figure>
   </div>
 
   <h2 style="--dot: var(--yellow)">איך הכנו את החנוכייה</h2>
@@ -135,6 +138,12 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
 
   <h2 style="--dot: var(--teal)">האהבה שלנו לאמנות</h2>
   <p>נעמי וליבי אוהבות ליצור, לצייר ולצבוע. בעבודה על החנוכייה למדו שאמנות יכולה לזוז ולהשתנות, שמחשב ובינה מלאכותית יכולים להיות כלי יצירה כמו מכחול, ושהכי כיף זה לראות רעיון הופך לחפץ אמיתי שמדליקים בו נרות. החנוכייה היא <b>המחווה שלנו ליעקב אגם</b>, ואנחנו מקוות שהיא תאיר את החג בהמון צבעים.</p>
+  <div class="album">
+    <figure><img src="photos/hello.jpg" style="object-position: center 40%" alt="ליבי ונעמי גב אל גב"><figcaption>ליבי ונעמי</figcaption></figure>
+    <figure><img src="photos/museum.jpg" style="object-position: center 38%" alt="ליבי ונעמי ליד דגם המזרקה במוזיאון אגם"><figcaption>דגם המזרקה במוזיאון אגם</figcaption></figure>
+    <figure><img src="photos/computer.jpg" style="object-position: 65% center" alt="ליבי ונעמי מול המחשב עם הדגם של החנוכייה"><figcaption>מעצבות עם Claude</figcaption></figure>
+    <figure><img src="photos/painting.jpg" alt="ליבי ונעמי צובעות את הטבעות"><figcaption>צובעות את הפאות</figcaption></figure>
+  </div>
 
   <div class="stripes thin"></div>
   <div class="sign">נעמי קפלן <span>כיתה ב'1</span> &nbsp;·&nbsp; ליבי קפלן <span>כיתה ד'1</span> &nbsp;·&nbsp; בית ספר כצנלסון, גבעתיים</div>
