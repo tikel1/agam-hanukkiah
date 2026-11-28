@@ -40,10 +40,11 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
 
 /* the hanukkiah: one picture, the two sides told in words */
 .hero { display: flex; gap: 6mm; align-items: stretch; margin-bottom: 4mm; }
-.top { display: flex; gap: 6mm; align-items: stretch; }
+.top { display: flex; gap: 6mm; align-items: flex-start; }
 .top .main { flex: 1; min-width: 0; }
-.top .shot { width: 50mm; flex: none; border-radius: 2.5mm; overflow: hidden; margin-bottom: 3mm; flex: none; background: var(--studio); border-radius: 2.5mm; overflow: hidden; }
-.top .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 38% 55%; }
+.top .side { width: 50mm; flex: none; margin-top: 2mm; }
+.top .shot { width: 50mm; height: 74mm; flex: none; border-radius: 2.5mm; overflow: hidden; flex: none; background: var(--studio); border-radius: 2.5mm; overflow: hidden; }
+.top .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
 .hero .text { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .chips { display: flex; gap: 3mm; margin-top: 2mm; }
 .chips span { flex: 1; border-top: 1mm solid var(--c); padding-top: 1mm; font-size: 9pt; line-height: 1.25; }
@@ -123,7 +124,7 @@ figcaption { font-size: 8.5pt; color: #666; margin-top: 1mm; text-align: center;
       </div>
     </div>
     </div>
-    <div class="shot"><img src="photos/hanukkiah.jpg" alt="חנוכיית אש ומים על שולחן, עם דפי הצביעה והטושים"></div>
+    <figure class="side"><div class="shot"><img src="photos/hanukkiah.jpg" alt="חנוכיית אש ומים על שולחן, עם דפי הצביעה והטושים"></div><figcaption>החנוכייה שלנו, עם דפי הצביעה</figcaption></figure>
   </div>
 
   <div class="about">
